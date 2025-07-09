@@ -1,0 +1,819 @@
+[
+  {
+    "productId": "818",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=818",
+    "productName": "NORTON / NRT 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7206-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7207-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7209-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2398-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2387-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2391-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2388-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7210-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 60,
+      "height": 82,
+      "floor_to_chair_height_cm": 49,
+      "depth": 56.5,
+      "weight": 8,
+      "boxWidth": 56,
+      "boxHeight": 84,
+      "boxDepth": 64,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 60,\"height_cm\": 82,\"floor_to_chair_height_cm\": 49,\"depth_cm\": 56.5,\"weight_kg\": 8,\"box_width_cm\": 56, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "1032",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1032",
+    "productName": "RUST\u0130C / RUS 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4563-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4548-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4550-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4547-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4549-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4552-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4553-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4554-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4556-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4557-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4560-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4562-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/%C3%96L%C3%87%C3%9C-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 60,
+      "height": 80,
+      "floor_to_chair_height_cm": 46,
+      "depth": 66,
+      "weight": 14.7,
+      "boxWidth": 62,
+      "boxHeight": 82,
+      "boxDepth": 68,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 60,\"height_cm\": 80,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 66,\"weight_kg\": 14.7,\"box_width_cm\": 62, \"box_height_cm\": 82, \"box_depth_cm\": 68, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "822",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=822",
+    "productName": "HAMPTON / HMP 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6294-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8313-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8317-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8315-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8318-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5553-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5607-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5619-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5469-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5531-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5494-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6224-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6236-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6238-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6246-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6266-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6289-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 60,
+      "height": 80,
+      "floor_to_chair_height_cm": 48,
+      "depth": 63,
+      "weight": 10.5,
+      "boxWidth": 60,
+      "boxHeight": 84,
+      "boxDepth": 64,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 60,\"height_cm\": 80,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 63,\"weight_kg\": 10.5,\"box_width_cm\": 60, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "821",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=821",
+    "productName": "HAMPTON / HMP 03",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2199-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2174.-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2198.-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2193-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2171-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 59,
+      "height": 81,
+      "floor_to_chair_height_cm": 42,
+      "depth": 68,
+      "weight": 18.5,
+      "boxWidth": 69,
+      "boxHeight": 85,
+      "boxDepth": 72,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 59,\"height_cm\": 81,\"floor_to_chair_height_cm\": 42,\"depth_cm\": 68,\"weight_kg\": 18.5,\"box_width_cm\": 69, \"box_height_cm\": 85, \"box_depth_cm\": 72, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "988",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=988",
+    "productName": "MARCUS / MRC 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2382-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2374-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2376-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2379-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2375-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2373-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2380-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2381-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/%C3%96L%C3%87%C3%9C-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 55,
+      "height": 76,
+      "floor_to_chair_height_cm": 48,
+      "depth": 55,
+      "weight": 13,
+      "boxWidth": 57,
+      "boxHeight": 78,
+      "boxDepth": 57,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 55,\"height_cm\": 76,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 55,\"weight_kg\": 13,\"box_width_cm\": 57, \"box_height_cm\": 78, \"box_depth_cm\": 57, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "776",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=776",
+    "productName": "VEN\u00dcS SANDALYE YASTIKLI / VNS 02",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VNS01_4-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9806-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9815-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9812-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9803-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9817-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/VENUS-OLCU-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 54,
+      "height": 78,
+      "floor_to_chair_height_cm": 46,
+      "depth": 58,
+      "weight": 7.7,
+      "boxWidth": 55,
+      "boxHeight": 80,
+      "boxDepth": 59,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 54,\"height_cm\": 78,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 58,\"weight_kg\": 7.7,\"box_width_cm\": 55, \"box_height_cm\": 80, \"box_depth_cm\": 59, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "60",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=60",
+    "productName": "BEGONV\u0130L / BGN 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4368-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4361-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4366-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4359-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4364-1000x1000w.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/begonvil_olcu_SON-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 61,
+      "height": 77,
+      "floor_to_chair_height_cm": 46,
+      "depth": 60,
+      "weight": 9.45,
+      "boxWidth": 62,
+      "boxHeight": 79,
+      "boxDepth": 61,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 61,\"height_cm\": 77,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 60,\"weight_kg\": 9.45,\"box_width_cm\": 62, \"box_height_cm\": 79, \"box_depth_cm\": 61, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "7",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=7",
+    "productName": "N\u0130L / NIL 02",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4108-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4105-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4107-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4106-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4104-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/nil/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 61,
+      "height": 78,
+      "floor_to_chair_height_cm": 51,
+      "depth": 63,
+      "weight": 11.6,
+      "boxWidth": 61,
+      "boxHeight": 78,
+      "boxDepth": 63,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 61,\"height_cm\": 78,\"floor_to_chair_height_cm\": 51,\"depth_cm\": 63,\"weight_kg\": 11.6,\"box_width_cm\": 61, \"box_height_cm\": 78, \"box_depth_cm\": 63, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "109",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=109",
+    "productName": "MADR\u0130D M\u00dcD\u00dcR / MRD 09",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/mrd09-1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MRD09_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MRD09_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/mrd09-2-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/MADRID%20OLCU_3-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 60,
+      "height": 110,
+      "floor_to_chair_height_cm": 45,
+      "depth": 60,
+      "weight": 11,
+      "boxWidth": 61,
+      "boxHeight": 112,
+      "boxDepth": 61,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 60,\"height_cm\": 110,\"floor_to_chair_height_cm\": 45,\"depth_cm\": 60,\"weight_kg\": 11,\"box_width_cm\": 61, \"box_height_cm\": 112, \"box_depth_cm\": 61, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "83",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=83",
+    "productName": "PASS BERJER BA\u015eLIKLI / PSS 03",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/pss03-2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_3-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_4-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/pss03-1-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/PASS%20BERJER%20BASLIKLI%20OLCU-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 65,
+      "height": 116,
+      "floor_to_chair_height_cm": 46,
+      "depth": 71,
+      "weight": 17.25,
+      "boxWidth": 66,
+      "boxHeight": 118,
+      "boxDepth": 72,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 65,\"height_cm\": 116,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 71,\"weight_kg\": 17.25,\"box_width_cm\": 66, \"box_height_cm\": 118, \"box_depth_cm\": 72, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "101",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=101",
+    "productName": "MADR\u0130D SIRT DESTEKL\u0130 SANDALYE / MRD 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/mrd01-1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MRD01_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MRD01_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/mrd01-2-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/MADRID%20OLCU_-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 50,
+      "height": 81,
+      "floor_to_chair_height_cm": 46,
+      "depth": 57,
+      "weight": 7.2,
+      "boxWidth": 51,
+      "boxHeight": 100,
+      "boxDepth": 68,
+      "qtyPerBox": 2,
+      "rawText": "{\"width_cm\": 50,\"height_cm\": 81,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 57,\"weight_kg\": 7.20,\"box_width_cm\": 51, \"box_height_cm\": 100, \"box_depth_cm\": 68, \"qty_per_box\": 2}"
+    }
+  },
+  {
+    "productId": "882",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=882",
+    "productName": "BETHOVEN / BTH 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog0147-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog01651-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog0160-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog0142-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/%C3%96L%C3%87%C3%9C-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 56,
+      "height": 81,
+      "floor_to_chair_height_cm": 48,
+      "depth": 59,
+      "weight": 9,
+      "boxWidth": 58,
+      "boxHeight": 84,
+      "boxDepth": 64,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 56,\"height_cm\": 81,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 59,\"weight_kg\": 9,\"box_width_cm\": 58, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "321",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=321",
+    "productName": "LENA / LNA 03",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/lna02-2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LNA03_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LNA03_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/lna02-3-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/LENA%20OLCU-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 48,
+      "height": 86,
+      "floor_to_chair_height_cm": 48,
+      "depth": 59,
+      "weight": 6.29,
+      "boxWidth": 49,
+      "boxHeight": 88,
+      "boxDepth": 56,
+      "qtyPerBox": 5,
+      "rawText": "{\"width_cm\": 48, \"height_cm\": 86, \"floor_to_chair_height_cm\": 48, \"depth_cm\": 59, \"weight_kg\": 6.29, \"box_width_cm\": 49, \"box_height_cm\": 88, \"box_depth_cm\": 56, \"qty_per_box\": 5}"
+    }
+  },
+  {
+    "productId": "922",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=922",
+    "productName": "T\u0130LLA / TLA 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0183-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0180-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0182-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0179-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0181-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/%C3%96L%C3%87%C3%9C-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 74,
+      "height": 81,
+      "floor_to_chair_height_cm": 43,
+      "depth": 71,
+      "weight": 20.4,
+      "boxWidth": 80,
+      "boxHeight": 77,
+      "boxDepth": 73,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 74,\"height_cm\": 81,\"floor_to_chair_height_cm\": 43,\"depth_cm\": 71,\"weight_kg\": 20.4,\"box_width_cm\": 80, \"box_height_cm\": 77, \"box_depth_cm\": 73, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "898",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=898",
+    "productName": "VOONKA / VNK 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_6094-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9841-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9844-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9843-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9845-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9840-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/VNK_01-1-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 57,
+      "height": 76,
+      "floor_to_chair_height_cm": 56,
+      "depth": 58,
+      "weight": 6.6,
+      "boxWidth": 57,
+      "boxHeight": 78,
+      "boxDepth": 58,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 57,\"height_cm\": 76,\"floor_to_chair_height_cm\": 56,\"depth_cm\": 58,\"weight_kg\": 6.6,\"box_width_cm\": 57, \"box_height_cm\": 78, \"box_depth_cm\": 58, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "61",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=61",
+    "productName": "L\u0130V / LIV 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LIV01_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LIV01_1-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/LIVOLCU-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 65,
+      "height": 73,
+      "floor_to_chair_height_cm": 41,
+      "depth": 64,
+      "weight": 11.6,
+      "boxWidth": 65,
+      "boxHeight": 75,
+      "boxDepth": 66,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 65, \"height_cm\": 73, \"floor_to_chair_height_cm\": 41, \"depth_cm\": 64, \"weight_kg\": 11.6, \"box_width_cm\": 65, \"box_height_cm\": 75, \"box_depth_cm\": 66, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "553",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=553",
+    "productName": "BAZZ / BZZ 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BZZ01_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BZZ01_1-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/bazz_olcu_SON-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 67,
+      "height": 77,
+      "floor_to_chair_height_cm": 40,
+      "depth": 76,
+      "weight": 14.8,
+      "boxWidth": 68,
+      "boxHeight": 79,
+      "boxDepth": 77,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 67,\"height_cm\": 77,\"floor_to_chair_height_cm\": 40,\"depth_cm\": 76,\"weight_kg\": 14.8,\"box_width_cm\": 68, \"box_height_cm\": 79, \"box_depth_cm\": 77, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "820",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=820",
+    "productName": "NORTON / NRT 04",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2993-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2983-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2990-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2985-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2982-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2989-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2996-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2991-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2992-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/%C3%B6l%C3%A7%C3%BC_-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 67,
+      "height": 79,
+      "floor_to_chair_height_cm": 44,
+      "depth": 67,
+      "weight": 11.9,
+      "boxWidth": 68,
+      "boxHeight": 81,
+      "boxDepth": 69,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 67,\"height_cm\": 79,\"floor_to_chair_height_cm\": 44,\"depth_cm\": 67,\"weight_kg\": 11.9,\"box_width_cm\": 68, \"box_height_cm\": 81, \"box_depth_cm\": 69, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "853",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=853",
+    "productName": "ZEN / ZEN 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9852-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9873-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9875-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9874-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9872-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9877-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9879-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9861-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/%C3%96L%C3%87%C3%9C-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 57,
+      "height": 84,
+      "floor_to_chair_height_cm": 47,
+      "depth": 66,
+      "weight": 8.8,
+      "boxWidth": 58,
+      "boxHeight": 85,
+      "boxDepth": 47,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 57,\"height_cm\": 84,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 66,\"weight_kg\": 8.8,\"box_width_cm\": 58, \"box_height_cm\": 85, \"box_depth_cm\": 47, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "1007",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1007",
+    "productName": "SANTANA \u0130PL\u0130 / SNT 06",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8634-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8626-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8638-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8630-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8631-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8629-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/SANTANA-tekli-OLCU_SON-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 57,
+      "height": 76,
+      "floor_to_chair_height_cm": 47,
+      "depth": 70,
+      "weight": 9.25,
+      "boxWidth": 58,
+      "boxHeight": 78,
+      "boxDepth": 71,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 57,\"height_cm\": 76,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 70,\"weight_kg\": 9.25,\"box_width_cm\": 58, \"box_height_cm\": 78, \"box_depth_cm\": 71, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "1144",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1144",
+    "productName": "SALV\u0130A / SAL 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8272-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8261-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8263-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8262-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8258-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8266-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8268-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8269-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8271-1000x1000.jpg"
+    ],
+    "dimensionsImage": null,
+    "error": null
+  },
+  {
+    "productId": "766",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=766",
+    "productName": "GLORY / GLR 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/GLORY/GLR01_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/GLR01_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/GLR01_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/GLORY/GLR01_1-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/GLORY/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 55,
+      "height": 77,
+      "floor_to_chair_height_cm": 45,
+      "depth": 57,
+      "weight": 7,
+      "boxWidth": 56,
+      "boxHeight": 79,
+      "boxDepth": 58,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 55,\"height_cm\": 77,\"floor_to_chair_height_cm\": 45,\"depth_cm\": 57,\"weight_kg\": 7,\"box_width_cm\": 56, \"box_height_cm\": 79, \"box_depth_cm\": 58, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "866",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=866",
+    "productName": "KEEN / KN 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8376-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8369-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8375-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8374-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8368-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 58,
+      "height": 76,
+      "floor_to_chair_height_cm": 46,
+      "depth": 61,
+      "weight": 13.4,
+      "boxWidth": null,
+      "boxHeight": null,
+      "boxDepth": null,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 58,\"height_cm\": 76,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 61,\"weight_kg\": 13.4,\"box_width_cm\": null, \"box_height_cm\": null, \"box_depth_cm\": null, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "835",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=835",
+    "productName": "BENJAM\u0130N / BJM 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0860-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0857-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0859-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0858-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0856-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/%C3%96L%C3%87%C3%9C-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 51,
+      "height": 83,
+      "floor_to_chair_height_cm": 48,
+      "depth": 51,
+      "weight": 11.2,
+      "boxWidth": 56,
+      "boxHeight": 87,
+      "boxDepth": 58,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 51,\"height_cm\": 83,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 51,\"weight_kg\": 11.2,\"box_width_cm\": 56, \"box_height_cm\": 87, \"box_depth_cm\": 58, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "172",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=172",
+    "productName": "ZUCA / ZUC 08",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/zuc08-1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ZUC08_1-1000x1000.jpg"
+    ],
+    "dimensionsImage": null,
+    "error": null
+  },
+  {
+    "productId": "545",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=545",
+    "productName": "BABY / BBY 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BBY01_2-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BBY01_1-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/BABY02_OLCU_ahsap_son-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 45,
+      "height": 91,
+      "floor_to_chair_height_cm": 60,
+      "depth": 51,
+      "weight": 9,
+      "boxWidth": 46,
+      "boxHeight": 93,
+      "boxDepth": 52,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 45,\"height_cm\": 91,\"floor_to_chair_height_cm\": 60,\"depth_cm\": 51,\"weight_kg\": 9,\"box_width_cm\": 46, \"box_height_cm\": 93, \"box_depth_cm\": 52, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "535",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=535",
+    "productName": "ARMEN / ARME 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ARN-01_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ARN-01_3-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ARN-01_2-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/ARMEN_OLCU-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 74,
+      "height": 113,
+      "floor_to_chair_height_cm": 42,
+      "depth": 75,
+      "weight": 18,
+      "boxWidth": 75,
+      "boxHeight": 115,
+      "boxDepth": 76,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 74,\"height_cm\": 113,\"floor_to_chair_height_cm\": 42,\"depth_cm\": 75,\"weight_kg\": 18,\"box_width_cm\": 75, \"box_height_cm\": 115, \"box_depth_cm\": 76, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "690",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=690",
+    "productName": "L\u0130ON BAR / LON 09",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9959-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9955-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9958-1000x1000h.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9956-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9953-1000x1000w.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/LION%20OLCU%20BAR-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 50,
+      "height": 110,
+      "floor_to_chair_height_cm": 51,
+      "depth": 75,
+      "weight": 8.2,
+      "boxWidth": 52,
+      "boxHeight": 114,
+      "boxDepth": 59,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 50,\"height_cm\": 110,\"floor_to_chair_height_cm\": 51,\"depth_cm\": 75,\"weight_kg\": 8.2,\"box_width_cm\": 52, \"box_height_cm\": 114, \"box_depth_cm\": 59, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "582",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=582",
+    "productName": "BROWN / BRW 03",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BRW03_7-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/1T0A4749-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/1T0A4753-1000x1000w.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BROWN-KUMAS%CC%A7-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/Untitled%20Catalog0444-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/Untitled%20Catalog0447-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/brown-olcu-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 54,
+      "height": 81,
+      "floor_to_chair_height_cm": 47,
+      "depth": 55,
+      "weight": 9.7,
+      "boxWidth": 55,
+      "boxHeight": 83,
+      "boxDepth": 56,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 54,\"height_cm\": 81,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 55,\"weight_kg\": 9.7,\"box_width_cm\": 55, \"box_height_cm\": 83, \"box_depth_cm\": 56, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "957",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=957",
+    "productName": "BETA / BTA 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4143-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7881-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4139-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7876-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7886-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7869-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4137-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4140-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4136-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4138-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4142-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/%C3%96L%C3%87%C3%9C-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 62,
+      "height": 83,
+      "floor_to_chair_height_cm": 50,
+      "depth": 59,
+      "weight": 11,
+      "boxWidth": 60,
+      "boxHeight": 85,
+      "boxDepth": 64,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 62,\"height_cm\": 83,\"floor_to_chair_height_cm\": 50,\"depth_cm\": 59,\"weight_kg\": 11,\"box_width_cm\": 60, \"box_height_cm\": 85, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "846",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=846",
+    "productName": "L\u0130MA / LMA 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_1108-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0098-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8755-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0132-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8753-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8757-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8748-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0140-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0146-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0152-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0160-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/%C3%B6l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 59,
+      "height": 78,
+      "floor_to_chair_height_cm": 47,
+      "depth": 58,
+      "weight": 9,
+      "boxWidth": null,
+      "boxHeight": null,
+      "boxDepth": null,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 59,\"height_cm\": 78,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 58,\"weight_kg\": 9,\"box_width_cm\": null, \"box_height_cm\": null, \"box_depth_cm\": null, \"qty_per_box\": 1}"
+    }
+  }
+]

@@ -1,0 +1,4 @@
+.env
+.idea
+caris-scraper-python/.venv
+storage/*

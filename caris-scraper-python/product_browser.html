@@ -1,0 +1,2969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caris Product Browser - Scraper Preview</title>
+    <script src="https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.iife.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.3rem 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .header .subtitle {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            margin-top: 0.05rem;
+        }
+
+        .stats-mini {
+            display: none;
+        }
+
+        .stat-mini {
+            text-align: center;
+        }
+
+        .stat-mini-value {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 350px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            margin-top: 45px;
+            height: calc(100vh - 45px);
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            background: #f8f9fa;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-tab:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .sidebar-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            background: #f8f9fa;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .sidebar-content {
+            display: none;
+        }
+
+        .sidebar-content.active {
+            display: block;
+        }
+
+        .product-list {
+            padding: 0.5rem 0;
+        }
+
+        .product-item {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .product-item:hover {
+            background: #f8f9fa;
+        }
+
+        .product-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .product-item.active .product-item-id {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .product-thumbnail {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: contain;
+            background: #f0f0f0;
+        }
+
+        .product-item-info {
+            flex: 1;
+        }
+
+        .product-item-id {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.2rem;
+        }
+
+        .product-item-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .product-item-status {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            margin-top: 0.3rem;
+            display: inline-block;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-top: 45px;
+            height: calc(100vh - 45px);
+            overflow-y: auto;
+            background: white;
+        }
+
+        .product-detail {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-detail-header {
+            margin-bottom: 1rem;
+        }
+
+        .product-detail-info h1 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+            color: #333;
+        }
+
+        .product-detail-info h1 a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .product-detail-info h1 a:hover {
+            color: #667eea;
+        }
+
+        .external-link-icon {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .product-detail-id {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-url-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .product-url-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .content-grid {
+            display: block;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-gallery h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .main-image-container {
+            position: relative;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .image-controls {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .image-controls:hover {
+            background: rgba(0,0,0,0.9);
+        }
+
+        .prev-btn {
+            left: 15px;
+        }
+
+        .next-btn {
+            right: 15px;
+        }
+
+        .image-counter {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .thumbnail-strip {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.5rem 0;
+            scrollbar-width: thin;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: contain;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            background: #f8f9fa;
+        }
+
+        .thumbnail.active {
+            opacity: 1;
+            border: 3px solid #667eea;
+        }
+
+        .thumbnail:hover {
+            opacity: 1;
+        }
+
+        /* Dimensions Panel */
+        .dimensions-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .dimensions-panel h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .dimensions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .dimensions-table th,
+        .dimensions-table td {
+            padding: 0.5rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .dimensions-table th {
+            background: #f8f9fa;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dimensions-table td {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .dimensions-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .raw-text {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #666;
+            white-space: pre-wrap;
+            border: 1px solid #e9ecef;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-product-selected {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: #666;
+        }
+
+        .no-product-selected h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* Order Styles */
+        .order-list {
+            padding: 0.5rem 0;
+        }
+
+        .order-item {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-item:hover {
+            background: #f8f9fa;
+        }
+
+        .order-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .order-item-info {
+            flex: 1;
+        }
+
+        .order-item-id {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.2rem;
+        }
+
+        .order-item.active .order-item-id {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .order-item-summary {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .order-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.3rem 0.6rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .create-order-btn {
+            margin: 1rem;
+            width: calc(100% - 2rem);
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .create-order-btn:hover {
+            background: #218838;
+        }
+
+        .order-detail {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .order-detail-header {
+            margin-bottom: 1rem;
+        }
+
+        .order-detail-info h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+            color: #333;
+        }
+
+        .order-detail-id {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .order-items h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #333;
+        }
+
+        .order-item-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .order-item-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-item-thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: contain;
+            background: #f0f0f0;
+        }
+
+        .order-item-basic-info {
+            flex: 1;
+        }
+
+        .order-item-product-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .order-item-product-id {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .order-item-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .input-group input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .fabric-input-container {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .fabric-input-container input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .fabric-browse-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            background: #667eea;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+
+        .fabric-browse-btn:hover {
+            background: #5a67d8;
+            border-color: #5a67d8;
+        }
+
+        .order-item-calculations {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .calculation-item {
+            text-align: center;
+        }
+
+        .calculation-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calculation-value {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .order-summary {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .order-summary h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: #333;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .container-progress {
+            margin-top: 0.8rem;
+            padding: 0.8rem;
+            background: #e8f4f8;
+            border-radius: 6px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .container-progress h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 16px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #17a2b8 100%);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .add-product-btn {
+            margin: 0.8rem 0;
+            padding: 0.6rem 1rem;
+            border: 2px dashed #667eea;
+            border-radius: 6px;
+            background: transparent;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .add-product-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Active Order Summary */
+        .active-order-summary {
+            position: fixed;
+            top: 70px;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px 0 0 8px;
+            padding: 1rem;
+            box-shadow: -2px 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            max-width: 300px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .active-order-summary.visible {
+            transform: translateX(0);
+        }
+
+        .active-order-summary h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .active-order-toggle {
+            position: fixed;
+            top: 80px;
+            right: 0;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 101;
+            font-size: 0.8rem;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+        }
+
+        .quick-add-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .quick-add-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .quick-add-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-add-inputs .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quick-add-inputs .input-group label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .quick-add-inputs .input-group input {
+            padding: 0.4rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .quick-add-inputs .fabric-input-container {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .quick-add-inputs .fabric-input-container input {
+            flex: 1;
+            padding: 0.4rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .quick-add-inputs .fabric-browse-btn {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #667eea;
+            background: #667eea;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+
+        .quick-add-inputs .fabric-browse-btn:hover {
+            background: #5a67d8;
+            border-color: #5a67d8;
+        }
+
+        .quick-add-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .quick-add-btn:hover {
+            background: #218838;
+        }
+
+        .quick-add-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .sidebar {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 300px;
+                margin-top: 0;
+            }
+            
+            .main-content {
+                margin-top: 0;
+                height: calc(100vh - 300px);
+            }
+            
+            .header {
+                position: relative;
+            }
+            
+            .stats-mini {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" v-scope @vue:mounted="mounted">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>Caris Product Browser</h1>
+                <div class="subtitle">Scraper Preview - Browse furniture products with AI-parsed dimensions</div>
+            </div>
+            <div class="stats-mini">
+                <div class="stat-mini">
+                    <div class="stat-mini-value">{{ productData.length }}</div>
+                    <div>Products</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-value">{{ withDimensions }}</div>
+                    <div>With Dimensions</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-value">{{ totalImages }}</div>
+                    <div>Images</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Order Toggle -->
+        <button class="active-order-toggle" @click="toggleActiveOrderSummary" v-if="activeOrderId">
+            {{ activeOrderSummaryVisible ? 'Hide' : 'Show' }} Active Order
+        </button>
+        <!-- Active Order Summary -->
+        <div class="active-order-summary" :class="{ visible: activeOrderSummaryVisible }" v-if="activeOrderId">
+            <h4>{{ activeOrder.name }}</h4>
+            <div class="summary-item">
+                <div class="summary-label">Items</div>
+                <div class="summary-value">{{ activeOrderItemCount }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Total</div>
+                <div class="summary-value">€{{ activeOrderTotal.toFixed(2) }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Volume</div>
+                <div class="summary-value">{{ activeOrderVolume.toFixed(2) }} m³</div>
+            </div>
+            <div class="container-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" :style="{ width: Math.min(activeOrderContainerPercent, 100) + '%' }"></div>
+                </div>
+                <div class="progress-text">{{ activeOrderContainerPercent.toFixed(1) }}% of 40ft container</div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab" :class="{ active: activeTab === 'products' }" @click="switchTab('products')">Products</button>
+                <button class="sidebar-tab" :class="{ active: activeTab === 'orders' }" @click="switchTab('orders')">Orders</button>
+            </div>
+            
+            <!-- Products Tab -->
+            <div class="sidebar-content" :class="{ active: activeTab === 'products' }">
+                <div class="sidebar-header">
+                    <h2>Products</h2>
+                    <input type="text" class="search-box" placeholder="Search products..." v-model="searchQuery">
+                </div>
+                <div class="product-list">
+                    <div v-for="product in filteredProducts" :key="product.productId" 
+                         class="product-item" 
+                         :class="{ active: currentProductId === product.productId }"
+                         @click="selectProduct(product.productId)">
+                        <img v-if="product.images && product.images.length > 0" 
+                             :src="product.images[0]" 
+                             class="product-thumbnail" 
+                             alt="Product thumbnail">
+                        <div v-else class="product-thumbnail"></div>
+                        <div class="product-item-info">
+                            <div class="product-item-id">ID: {{ product.productId }}</div>
+                            <div class="product-item-name">{{ product.productName }}</div>
+                            <div v-if="product.error" class="product-item-status status-error">Error</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Orders Tab -->
+            <div class="sidebar-content" :class="{ active: activeTab === 'orders' }">
+                <div class="sidebar-header">
+                    <h2>Orders</h2>
+                    <div style="margin-top: 0.5rem;">
+                        <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">Active Order:</label>
+                        <select v-model="activeOrderId" @change="saveOrders" style="width: 100%; padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem;">
+                            <option value="">None</option>
+                            <option v-for="order in orderList" :key="order.id" :value="order.id">{{ order.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="create-order-btn" @click="createNewOrder">+ Create New Order</button>
+                <div class="order-list">
+                    <div v-for="order in orderList" :key="order.id" 
+                         class="order-item" 
+                         :class="{ active: currentOrderId === order.id }"
+                         @click="selectOrder(order.id)">
+                        <div class="order-item-info">
+                            <div class="order-item-id">{{ order.id }}</div>
+                            <div class="order-item-summary">{{ order.name }}</div>
+                            <div class="order-item-id">{{ Object.keys(order.items).length }} items • €{{ calculateOrderTotal(order).toFixed(2) }}</div>
+                        </div>
+                        <div class="order-item-actions">
+                            <button class="btn-small btn-danger" @click.stop="deleteOrder(order.id)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Product Detail View -->
+            <div v-if="activeTab === 'products'" class="product-detail">
+                <div v-if="!currentProduct" class="no-product-selected">
+                    <div>
+                        <h2>Select a product</h2>
+                        <p>Choose a product from the sidebar to view details</p>
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="product-detail-header">
+                        <div class="product-detail-info">
+                            <h1><a :href="currentProduct.url" target="_blank">{{ currentProduct.productName }} <span class="external-link-icon">↗</span></a></h1>
+                            <div class="product-detail-id">Product ID: {{ currentProduct.productId }}</div>
+                        </div>
+                    </div>
+                    
+                    <div v-if="currentProduct.error" class="error-message">{{ currentProduct.error }}</div>
+                    
+                    <!-- Quick Add to Active Order -->
+                    <div v-if="activeOrderId" class="quick-add-section">
+                        <h3>Quick Add to {{ activeOrder.name }}</h3>
+                        <div class="quick-add-inputs">
+                            <div class="input-group">
+                                <label>Fabric Choice</label>
+                                <div class="fabric-input-container">
+                                    <input type="text" v-model="quickAdd.fabric" placeholder="Enter fabric code or click to browse">
+                                    <button type="button" class="fabric-browse-btn" @click="showFabricPicker('quickAdd')">Browse</button>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Price (€)</label>
+                                <input type="number" step="0.01" v-model="quickAdd.price">
+                            </div>
+                            <div class="input-group">
+                                <label>Quantity</label>
+                                <input type="number" v-model="quickAdd.quantity">
+                            </div>
+                        </div>
+                        <button class="quick-add-btn" @click="quickAddToActiveOrder" :disabled="!quickAdd.price || !quickAdd.quantity">
+                            Add to Active Order
+                        </button>
+                    </div>
+                    
+                    <div class="content-grid">
+                        <div class="image-gallery">
+                            <div v-if="!currentProduct.images || currentProduct.images.length === 0" class="empty-state">
+                                <h2>No images available</h2>
+                            </div>
+                            <div v-else>
+                                <div class="main-image-container">
+                                    <img :src="currentProduct.images[currentImageIndex]" class="main-image" alt="Product image">
+                                    <button v-if="currentProduct.images.length > 1" class="image-controls prev-btn" @click="changeImage(-1)">‹</button>
+                                    <button v-if="currentProduct.images.length > 1" class="image-controls next-btn" @click="changeImage(1)">›</button>
+                                    <div v-if="currentProduct.images.length > 1" class="image-counter">{{ currentImageIndex + 1 }} / {{ currentProduct.images.length }}</div>
+                                </div>
+                                <div v-if="currentProduct.images.length > 1" class="thumbnail-strip">
+                                    <img v-for="(image, index) in currentProduct.images" :key="index"
+                                         :src="image" 
+                                         class="thumbnail" 
+                                         :class="{ active: index === currentImageIndex }"
+                                         @click="currentImageIndex = index" 
+                                         :alt="`Thumbnail ${index + 1}`">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dimensions-panel">
+                            <h2>Dimensions</h2>
+                            <div v-if="!currentProduct.dimensions" class="empty-state">
+                                <p>No dimensions available</p>
+                            </div>
+                            <table v-else class="dimensions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Dimension</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-if="currentProduct.dimensions.width">
+                                        <td>Width</td>
+                                        <td>{{ currentProduct.dimensions.width }} cm</td>
+                                    </tr>
+                                    <tr v-if="currentProduct.dimensions.height">
+                                        <td>Height</td>
+                                        <td>{{ currentProduct.dimensions.height }} cm</td>
+                                    </tr>
+                                    <tr v-if="currentProduct.dimensions.depth">
+                                        <td>Depth</td>
+                                        <td>{{ currentProduct.dimensions.depth }} cm</td>
+                                    </tr>
+                                    <tr v-if="currentProduct.dimensions.floor_to_chair_height_cm">
+                                        <td>Seat Height</td>
+                                        <td>{{ currentProduct.dimensions.floor_to_chair_height_cm }} cm</td>
+                                    </tr>
+                                    <tr v-if="currentProduct.dimensions.weight">
+                                        <td>Weight</td>
+                                        <td>{{ currentProduct.dimensions.weight }} kg</td>
+                                    </tr>
+                                    <tr v-if="currentProduct.dimensions.boxWidth">
+                                        <td>Box Width</td>
+                                        <td>{{ currentProduct.dimensions.boxWidth }} cm</td>
+                                    </tr>
+                                    <tr v-if="currentProduct.dimensions.boxHeight">
+                                        <td>Box Height</td>
+                                        <td>{{ currentProduct.dimensions.boxHeight }} cm</td>
+                                    </tr>
+                                    <tr v-if="currentProduct.dimensions.boxDepth">
+                                        <td>Box Depth</td>
+                                        <td>{{ currentProduct.dimensions.boxDepth }} cm</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Detail View -->
+            <div v-if="activeTab === 'orders'" class="order-detail">
+                <div v-if="!currentOrder" class="no-product-selected">
+                    <div>
+                        <h2>Select an order</h2>
+                        <p>Choose an order from the sidebar to view details</p>
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="order-detail-header">
+                        <div class="order-detail-info">
+                            <h1>{{ currentOrder.name }}</h1>
+                            <div class="order-detail-id">Order ID: {{ currentOrder.id }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <h2>Order Items ({{ orderItemList.length }})</h2>
+                        <div v-for="item in orderItemList" :key="item.productId" class="order-item-card">
+                            <div class="order-item-header">
+                                <img v-if="getProduct(item.productId).images && getProduct(item.productId).images.length > 0" 
+                                     :src="getProduct(item.productId).images[0]" 
+                                     class="order-item-thumbnail" 
+                                     alt="Product thumbnail">
+                                <div v-else class="order-item-thumbnail"></div>
+                                <div class="order-item-basic-info">
+                                    <div class="order-item-product-name">{{ getProduct(item.productId).productName }}</div>
+                                    <div class="order-item-product-id">ID: {{ item.productId }}</div>
+                                </div>
+                                <button class="btn-small btn-danger" @click="removeFromOrder(item.productId)">Remove</button>
+                            </div>
+                            
+                            <div class="order-item-inputs">
+                                <div class="input-group">
+                                    <label>Fabric Choice</label>
+                                    <div class="fabric-input-container">
+                                        <input type="text" v-model="item.fabric" @input="saveOrders" placeholder="Enter fabric code or click to browse">
+                                        <button type="button" class="fabric-browse-btn" @click="showFabricPicker('orderItem', item)">Browse</button>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Price (€)</label>
+                                    <input type="number" step="0.01" v-model="item.price" @input="saveOrders">
+                                </div>
+                                <div class="input-group">
+                                    <label>Quantity</label>
+                                    <input type="number" v-model="item.quantity" @input="saveOrders">
+                                </div>
+                            </div>
+                            
+                            <div class="order-item-calculations">
+                                <div class="calculation-item">
+                                    <div class="calculation-label">Unit Price</div>
+                                    <div class="calculation-value">€{{ (parseFloat(item.price) || 0).toFixed(2) }}</div>
+                                </div>
+                                <div class="calculation-item">
+                                    <div class="calculation-label">Quantity</div>
+                                    <div class="calculation-value">{{ parseInt(item.quantity) || 0 }}</div>
+                                </div>
+                                <div class="calculation-item">
+                                    <div class="calculation-label">Total Price</div>
+                                    <div class="calculation-value">€{{ ((parseFloat(item.price) || 0) * (parseInt(item.quantity) || 0)).toFixed(2) }}</div>
+                                </div>
+                                <div class="calculation-item">
+                                    <div class="calculation-label">Volume</div>
+                                    <div class="calculation-value">{{ calculateItemVolume(item).toFixed(3) }} m³</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="add-product-btn" @click="showAddProductModal = true">+ Add Product to Order</button>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-label">Total Items</div>
+                                <div class="summary-value">{{ orderItemList.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0) }}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Total Value</div>
+                                <div class="summary-value">€{{ calculateOrderTotal(currentOrder).toFixed(2) }}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Total Volume</div>
+                                <div class="summary-value">{{ calculateOrderVolume(currentOrder).toFixed(2) }} m³</div>
+                            </div>
+                        </div>
+                        
+                        <div class="container-progress">
+                            <h4>40ft Container Capacity</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" :style="{ width: Math.min(containerPercent, 100) + '%' }"></div>
+                            </div>
+                            <div class="progress-text">{{ containerPercent.toFixed(1) }}% filled ({{ calculateOrderVolume(currentOrder).toFixed(2) }} / {{ CONTAINER_40FT_VOLUME }} m³)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Modal -->
+        <div v-if="showAddProductModal" 
+             style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+            <div @click.stop style="background: white; padding: 2rem; border-radius: 8px; max-width: 500px; width: 90%;">
+                <h3 style="margin-bottom: 1rem;">Add Product to Order</h3>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Product:</label>
+                    <select v-model="newProduct.productId" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">Select a product</option>
+                        <option v-for="product in productData" :key="product.productId" :value="product.productId">
+                            {{ product.productName }} ({{ product.productId }})
+                        </option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Fabric Choice:</label>
+                    <div class="fabric-input-container">
+                        <input type="text" v-model="newProduct.fabric" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="Enter fabric code or click to browse">
+                        <button type="button" class="fabric-browse-btn" @click="showFabricPicker('newProduct')" style="margin-left: 0.5rem; padding: 0.5rem; border: 1px solid #667eea; background: #667eea; color: white; border-radius: 4px; cursor: pointer;">Browse</button>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Price (€):</label>
+                    <input type="number" step="0.01" v-model="newProduct.price" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Quantity:</label>
+                    <input type="number" v-model="newProduct.quantity" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button @click="showAddProductModal = false" style="padding: 0.5rem 1rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">Cancel</button>
+                    <button @click="addProductFromModal" style="padding: 0.5rem 1rem; border: none; border-radius: 4px; background: #667eea; color: white; cursor: pointer;">Add Product</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fabric Picker Modal -->
+        <div v-if="showFabricPickerModal" 
+             style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+            <div @click.stop style="background: white; padding: 2rem; border-radius: 8px; max-width: 800px; width: 90%; max-height: 90%; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3>Select Fabric</h3>
+                    <button @click="closeFabricPicker" style="padding: 0.5rem; border: none; background: none; font-size: 1.5rem; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" v-model="fabricSearchQuery" placeholder="Search fabrics..." 
+                           style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; max-height: 400px; overflow-y: auto;">
+                    <div v-for="fabric in filteredFabrics" :key="fabric.code" 
+                         @click="selectFabric(fabric)"
+                         style="border: 1px solid #ddd; border-radius: 8px; padding: 0.5rem; cursor: pointer; text-align: center; transition: all 0.2s; hover: border-color: #667eea;">
+                        <img :src="fabric.thumbnail_url" 
+                             :alt="fabric.code"
+                             style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 0.5rem;"
+                             @error="$event.target.style.display='none'">
+                        <div style="font-size: 0.8rem; font-weight: bold; margin-bottom: 0.2rem;">{{ fabric.code }}</div>
+                        <div style="font-size: 0.7rem; color: #666;">{{ fabric.alt_text }}</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                    <button @click="closeFabricPicker" style="padding: 0.5rem 1rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JSON_DATA_PLACEHOLDER - This will be replaced by the Python script
+        const productData = [
+        {
+                "productId": "818",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=818",
+                "productName": "NORTON / NRT 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7206-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7207-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7209-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2398-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2387-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2391-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_2388-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/_MG_7210-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2001/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 60,
+                        "height": 82,
+                        "floor_to_chair_height_cm": 49,
+                        "depth": 56.5,
+                        "weight": 8,
+                        "boxWidth": 56,
+                        "boxHeight": 84,
+                        "boxDepth": 64,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 60,\"height_cm\": 82,\"floor_to_chair_height_cm\": 49,\"depth_cm\": 56.5,\"weight_kg\": 8,\"box_width_cm\": 56, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "1032",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1032",
+                "productName": "RUSTİC / RUS 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4563-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4548-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4550-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4547-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4549-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4552-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4553-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4554-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4556-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4557-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4560-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4562-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/%C3%96L%C3%87%C3%9C-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 60,
+                        "height": 80,
+                        "floor_to_chair_height_cm": 46,
+                        "depth": 66,
+                        "weight": 14.7,
+                        "boxWidth": 62,
+                        "boxHeight": 82,
+                        "boxDepth": 68,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 60,\"height_cm\": 80,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 66,\"weight_kg\": 14.7,\"box_width_cm\": 62, \"box_height_cm\": 82, \"box_depth_cm\": 68, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "822",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=822",
+                "productName": "HAMPTON / HMP 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6294-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8313-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8317-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8315-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8318-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5553-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5607-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5619-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5469-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5531-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_5494-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6224-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6236-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6238-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6246-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6266-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6289-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 60,
+                        "height": 80,
+                        "floor_to_chair_height_cm": 48,
+                        "depth": 63,
+                        "weight": 10.5,
+                        "boxWidth": 60,
+                        "boxHeight": 84,
+                        "boxDepth": 64,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 60,\"height_cm\": 80,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 63,\"weight_kg\": 10.5,\"box_width_cm\": 60, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "821",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=821",
+                "productName": "HAMPTON / HMP 03",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2199-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2174.-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2198.-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2193-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/_MG_2171-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/berjer%20HMP%2003/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 59,
+                        "height": 81,
+                        "floor_to_chair_height_cm": 42,
+                        "depth": 68,
+                        "weight": 18.5,
+                        "boxWidth": 69,
+                        "boxHeight": 85,
+                        "boxDepth": 72,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 59,\"height_cm\": 81,\"floor_to_chair_height_cm\": 42,\"depth_cm\": 68,\"weight_kg\": 18.5,\"box_width_cm\": 69, \"box_height_cm\": 85, \"box_depth_cm\": 72, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "988",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=988",
+                "productName": "MARCUS / MRC 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2382-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2374-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2376-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2379-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2375-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2373-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2380-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2381-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/%C3%96L%C3%87%C3%9C-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 55,
+                        "height": 76,
+                        "floor_to_chair_height_cm": 48,
+                        "depth": 55,
+                        "weight": 13,
+                        "boxWidth": 57,
+                        "boxHeight": 78,
+                        "boxDepth": 57,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 55,\"height_cm\": 76,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 55,\"weight_kg\": 13,\"box_width_cm\": 57, \"box_height_cm\": 78, \"box_depth_cm\": 57, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "776",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=776",
+                "productName": "VENÜS SANDALYE YASTIKLI / VNS 02",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VNS01_4-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9806-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9815-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9812-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9803-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VEN%C3%9CS%20/VNS%2002/_MG_9817-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/VENUS-OLCU-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 54,
+                        "height": 78,
+                        "floor_to_chair_height_cm": 46,
+                        "depth": 58,
+                        "weight": 7.7,
+                        "boxWidth": 55,
+                        "boxHeight": 80,
+                        "boxDepth": 59,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 54,\"height_cm\": 78,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 58,\"weight_kg\": 7.7,\"box_width_cm\": 55, \"box_height_cm\": 80, \"box_depth_cm\": 59, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "60",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=60",
+                "productName": "BEGONVİL / BGN 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4368-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4361-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4366-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4359-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/begonvil/_MG_4364-1000x1000w.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/begonvil_olcu_SON-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 61,
+                        "height": 77,
+                        "floor_to_chair_height_cm": 46,
+                        "depth": 60,
+                        "weight": 9.45,
+                        "boxWidth": 62,
+                        "boxHeight": 79,
+                        "boxDepth": 61,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 61,\"height_cm\": 77,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 60,\"weight_kg\": 9.45,\"box_width_cm\": 62, \"box_height_cm\": 79, \"box_depth_cm\": 61, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "7",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=7",
+                "productName": "NİL / NIL 02",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4108-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4105-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4107-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4106-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/nil/_MG_4104-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/nil/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 61,
+                        "height": 78,
+                        "floor_to_chair_height_cm": 51,
+                        "depth": 63,
+                        "weight": 11.6,
+                        "boxWidth": 61,
+                        "boxHeight": 78,
+                        "boxDepth": 63,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 61,\"height_cm\": 78,\"floor_to_chair_height_cm\": 51,\"depth_cm\": 63,\"weight_kg\": 11.6,\"box_width_cm\": 61, \"box_height_cm\": 78, \"box_depth_cm\": 63, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "109",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=109",
+                "productName": "MADRİD MÜDÜR / MRD 09",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/mrd09-1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MRD09_1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MRD09_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/mrd09-2-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/MADRID%20OLCU_3-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 60,
+                        "height": 110,
+                        "floor_to_chair_height_cm": 45,
+                        "depth": 60,
+                        "weight": 11,
+                        "boxWidth": 61,
+                        "boxHeight": 112,
+                        "boxDepth": 61,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 60,\"height_cm\": 110,\"floor_to_chair_height_cm\": 45,\"depth_cm\": 60,\"weight_kg\": 11,\"box_width_cm\": 61, \"box_height_cm\": 112, \"box_depth_cm\": 61, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "83",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=83",
+                "productName": "PASS BERJER BAŞLIKLI / PSS 03",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/pss03-2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_3-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/PSS03_4-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/pss03-1-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/PASS%20BERJER%20BASLIKLI%20OLCU-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 65,
+                        "height": 116,
+                        "floor_to_chair_height_cm": 46,
+                        "depth": 71,
+                        "weight": 17.25,
+                        "boxWidth": 66,
+                        "boxHeight": 118,
+                        "boxDepth": 72,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 65,\"height_cm\": 116,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 71,\"weight_kg\": 17.25,\"box_width_cm\": 66, \"box_height_cm\": 118, \"box_depth_cm\": 72, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "101",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=101",
+                "productName": "MADRİD SIRT DESTEKLİ SANDALYE / MRD 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/mrd01-1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MRD01_1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/MRD01_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/mrd01-2-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/MADRID%20OLCU_-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 50,
+                        "height": 81,
+                        "floor_to_chair_height_cm": 46,
+                        "depth": 57,
+                        "weight": 7.2,
+                        "boxWidth": 51,
+                        "boxHeight": 100,
+                        "boxDepth": 68,
+                        "qtyPerBox": 2,
+                        "rawText": "{\"width_cm\": 50,\"height_cm\": 81,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 57,\"weight_kg\": 7.20,\"box_width_cm\": 51, \"box_height_cm\": 100, \"box_depth_cm\": 68, \"qty_per_box\": 2}"
+                }
+        },
+        {
+                "productId": "882",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=882",
+                "productName": "BETHOVEN / BTH 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog0147-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog01651-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog0160-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/Untitled%20Catalog0142-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/BETHOVEN/%C3%96L%C3%87%C3%9C-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 56,
+                        "height": 81,
+                        "floor_to_chair_height_cm": 48,
+                        "depth": 59,
+                        "weight": 9,
+                        "boxWidth": 58,
+                        "boxHeight": 84,
+                        "boxDepth": 64,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 56,\"height_cm\": 81,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 59,\"weight_kg\": 9,\"box_width_cm\": 58, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "321",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=321",
+                "productName": "LENA / LNA 03",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/lna02-2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/LNA03_1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/LNA03_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/lna02-3-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/LENA%20OLCU-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 48,
+                        "height": 86,
+                        "floor_to_chair_height_cm": 48,
+                        "depth": 59,
+                        "weight": 6.29,
+                        "boxWidth": 49,
+                        "boxHeight": 88,
+                        "boxDepth": 56,
+                        "qtyPerBox": 5,
+                        "rawText": "{\"width_cm\": 48, \"height_cm\": 86, \"floor_to_chair_height_cm\": 48, \"depth_cm\": 59, \"weight_kg\": 6.29, \"box_width_cm\": 49, \"box_height_cm\": 88, \"box_depth_cm\": 56, \"qty_per_box\": 5}"
+                }
+        },
+        {
+                "productId": "922",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=922",
+                "productName": "TİLLA / TLA 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0183-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0180-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0182-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0179-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/_MG_0181-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/T%C4%B0LLA/TEKL%C4%B0/%C3%96L%C3%87%C3%9C-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 74,
+                        "height": 81,
+                        "floor_to_chair_height_cm": 43,
+                        "depth": 71,
+                        "weight": 20.4,
+                        "boxWidth": 80,
+                        "boxHeight": 77,
+                        "boxDepth": 73,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 74,\"height_cm\": 81,\"floor_to_chair_height_cm\": 43,\"depth_cm\": 71,\"weight_kg\": 20.4,\"box_width_cm\": 80, \"box_height_cm\": 77, \"box_depth_cm\": 73, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "898",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=898",
+                "productName": "VOONKA / VNK 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_6094-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9841-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9844-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9843-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9845-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/_MG_9840-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/VNK_01-1-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/VOONKA/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 57,
+                        "height": 76,
+                        "floor_to_chair_height_cm": 56,
+                        "depth": 58,
+                        "weight": 6.6,
+                        "boxWidth": 57,
+                        "boxHeight": 78,
+                        "boxDepth": 58,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 57,\"height_cm\": 76,\"floor_to_chair_height_cm\": 56,\"depth_cm\": 58,\"weight_kg\": 6.6,\"box_width_cm\": 57, \"box_height_cm\": 78, \"box_depth_cm\": 58, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "61",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=61",
+                "productName": "LİV / LIV 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/LIV01_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/LIV01_1-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/LIVOLCU-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 65,
+                        "height": 73,
+                        "floor_to_chair_height_cm": 41,
+                        "depth": 64,
+                        "weight": 11.6,
+                        "boxWidth": 65,
+                        "boxHeight": 75,
+                        "boxDepth": 66,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 65, \"height_cm\": 73, \"floor_to_chair_height_cm\": 41, \"depth_cm\": 64, \"weight_kg\": 11.6, \"box_width_cm\": 65, \"box_height_cm\": 75, \"box_depth_cm\": 66, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "553",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=553",
+                "productName": "BAZZ / BZZ 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BZZ01_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BZZ01_1-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/bazz_olcu_SON-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 67,
+                        "height": 77,
+                        "floor_to_chair_height_cm": 40,
+                        "depth": 76,
+                        "weight": 14.8,
+                        "boxWidth": 68,
+                        "boxHeight": 79,
+                        "boxDepth": 77,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 67,\"height_cm\": 77,\"floor_to_chair_height_cm\": 40,\"depth_cm\": 76,\"weight_kg\": 14.8,\"box_width_cm\": 68, \"box_height_cm\": 79, \"box_depth_cm\": 77, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "820",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=820",
+                "productName": "NORTON / NRT 04",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2993-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2983-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2990-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2985-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2982-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2989-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2996-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2991-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/_MG_2992-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2004/%C3%B6l%C3%A7%C3%BC_-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 67,
+                        "height": 79,
+                        "floor_to_chair_height_cm": 44,
+                        "depth": 67,
+                        "weight": 11.9,
+                        "boxWidth": 68,
+                        "boxHeight": 81,
+                        "boxDepth": 69,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 67,\"height_cm\": 79,\"floor_to_chair_height_cm\": 44,\"depth_cm\": 67,\"weight_kg\": 11.9,\"box_width_cm\": 68, \"box_height_cm\": 81, \"box_depth_cm\": 69, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "853",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=853",
+                "productName": "ZEN / ZEN 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9852-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9873-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9875-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9874-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9872-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9877-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9879-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/_MG_9861-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/ZEN/%C3%96L%C3%87%C3%9C-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 57,
+                        "height": 84,
+                        "floor_to_chair_height_cm": 47,
+                        "depth": 66,
+                        "weight": 8.8,
+                        "boxWidth": 58,
+                        "boxHeight": 85,
+                        "boxDepth": 47,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 57,\"height_cm\": 84,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 66,\"weight_kg\": 8.8,\"box_width_cm\": 58, \"box_height_cm\": 85, \"box_depth_cm\": 47, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "1007",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1007",
+                "productName": "SANTANA İPLİ / SNT 06",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8634-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8626-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8638-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8630-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8631-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SANTANA/SNT%2006/_MG_8629-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/SANTANA-tekli-OLCU_SON-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 57,
+                        "height": 76,
+                        "floor_to_chair_height_cm": 47,
+                        "depth": 70,
+                        "weight": 9.25,
+                        "boxWidth": 58,
+                        "boxHeight": 78,
+                        "boxDepth": 71,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 57,\"height_cm\": 76,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 70,\"weight_kg\": 9.25,\"box_width_cm\": 58, \"box_height_cm\": 78, \"box_depth_cm\": 71, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "1144",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1144",
+                "productName": "SALVİA / SAL 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8272-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8261-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8263-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8262-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8258-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8266-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8268-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8269-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/SALV%C4%B0A/_MG_8271-1000x1000.jpg"
+                ],
+                "dimensionsImage": null,
+                "error": null
+        },
+        {
+                "productId": "766",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=766",
+                "productName": "GLORY / GLR 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/GLORY/GLR01_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/GLR01_1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/GLR01_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/GLORY/GLR01_1-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/GLORY/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 55,
+                        "height": 77,
+                        "floor_to_chair_height_cm": 45,
+                        "depth": 57,
+                        "weight": 7,
+                        "boxWidth": 56,
+                        "boxHeight": 79,
+                        "boxDepth": 58,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 55,\"height_cm\": 77,\"floor_to_chair_height_cm\": 45,\"depth_cm\": 57,\"weight_kg\": 7,\"box_width_cm\": 56, \"box_height_cm\": 79, \"box_depth_cm\": 58, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "866",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=866",
+                "productName": "KEEN / KN 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8376-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8369-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8375-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8374-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/_MG_8368-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/KEEN/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 58,
+                        "height": 76,
+                        "floor_to_chair_height_cm": 46,
+                        "depth": 61,
+                        "weight": 13.4,
+                        "boxWidth": null,
+                        "boxHeight": null,
+                        "boxDepth": null,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 58,\"height_cm\": 76,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 61,\"weight_kg\": 13.4,\"box_width_cm\": null, \"box_height_cm\": null, \"box_depth_cm\": null, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "835",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=835",
+                "productName": "BENJAMİN / BJM 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0860-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0857-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0859-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0858-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/Untitled%20Catalog0856-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/BENJAM%C4%B0N/%C3%96L%C3%87%C3%9C-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 51,
+                        "height": 83,
+                        "floor_to_chair_height_cm": 48,
+                        "depth": 51,
+                        "weight": 11.2,
+                        "boxWidth": 56,
+                        "boxHeight": 87,
+                        "boxDepth": 58,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 51,\"height_cm\": 83,\"floor_to_chair_height_cm\": 48,\"depth_cm\": 51,\"weight_kg\": 11.2,\"box_width_cm\": 56, \"box_height_cm\": 87, \"box_depth_cm\": 58, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "172",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=172",
+                "productName": "ZUCA / ZUC 08",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/zuc08-1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ZUC08_1-1000x1000.jpg"
+                ],
+                "dimensionsImage": null,
+                "error": null
+        },
+        {
+                "productId": "545",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=545",
+                "productName": "BABY / BBY 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BBY01_2-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BBY01_1-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/BABY02_OLCU_ahsap_son-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 45,
+                        "height": 91,
+                        "floor_to_chair_height_cm": 60,
+                        "depth": 51,
+                        "weight": 9,
+                        "boxWidth": 46,
+                        "boxHeight": 93,
+                        "boxDepth": 52,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 45,\"height_cm\": 91,\"floor_to_chair_height_cm\": 60,\"depth_cm\": 51,\"weight_kg\": 9,\"box_width_cm\": 46, \"box_height_cm\": 93, \"box_depth_cm\": 52, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "535",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=535",
+                "productName": "ARMEN / ARME 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ARN-01_1-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ARN-01_3-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/ARN-01_2-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/ARMEN_OLCU-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 74,
+                        "height": 113,
+                        "floor_to_chair_height_cm": 42,
+                        "depth": 75,
+                        "weight": 18,
+                        "boxWidth": 75,
+                        "boxHeight": 115,
+                        "boxDepth": 76,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 74,\"height_cm\": 113,\"floor_to_chair_height_cm\": 42,\"depth_cm\": 75,\"weight_kg\": 18,\"box_width_cm\": 75, \"box_height_cm\": 115, \"box_depth_cm\": 76, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "690",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=690",
+                "productName": "LİON BAR / LON 09",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9959-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9955-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9958-1000x1000h.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9956-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/lion/lon%2009/_MG_9953-1000x1000w.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/LION%20OLCU%20BAR-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 50,
+                        "height": 110,
+                        "floor_to_chair_height_cm": 51,
+                        "depth": 75,
+                        "weight": 8.2,
+                        "boxWidth": 52,
+                        "boxHeight": 114,
+                        "boxDepth": 59,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 50,\"height_cm\": 110,\"floor_to_chair_height_cm\": 51,\"depth_cm\": 75,\"weight_kg\": 8.2,\"box_width_cm\": 52, \"box_height_cm\": 114, \"box_depth_cm\": 59, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "582",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=582",
+                "productName": "BROWN / BRW 03",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BRW03_7-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/1T0A4749-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/1T0A4753-1000x1000w.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BROWN-KUMAS%CC%A7-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/Untitled%20Catalog0444-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/brown/brw%2003/Untitled%20Catalog0447-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/brown-olcu-500x375.jpg",
+                "error": null,
+                "dimensions": {
+                        "width": 54,
+                        "height": 81,
+                        "floor_to_chair_height_cm": 47,
+                        "depth": 55,
+                        "weight": 9.7,
+                        "boxWidth": 55,
+                        "boxHeight": 83,
+                        "boxDepth": 56,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 54,\"height_cm\": 81,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 55,\"weight_kg\": 9.7,\"box_width_cm\": 55, \"box_height_cm\": 83, \"box_depth_cm\": 56, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "957",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=957",
+                "productName": "BETA / BTA 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4143-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7881-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4139-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7876-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7886-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_7869-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4137-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4140-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4136-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4138-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/_MG_4142-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/BETA/%C3%96L%C3%87%C3%9C-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 62,
+                        "height": 83,
+                        "floor_to_chair_height_cm": 50,
+                        "depth": 59,
+                        "weight": 11,
+                        "boxWidth": 60,
+                        "boxHeight": 85,
+                        "boxDepth": 64,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 62,\"height_cm\": 83,\"floor_to_chair_height_cm\": 50,\"depth_cm\": 59,\"weight_kg\": 11,\"box_width_cm\": 60, \"box_height_cm\": 85, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+                }
+        },
+        {
+                "productId": "846",
+                "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=846",
+                "productName": "LİMA / LMA 01",
+                "images": [
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_1108-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0098-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8755-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0132-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8753-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8757-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_8748-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0140-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0146-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0152-1000x1000.jpg",
+                        "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/_MG_0160-1000x1000.jpg"
+                ],
+                "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/L%C4%B0MA/%C3%B6l%C3%A7%C3%BC-500x375.png",
+                "error": null,
+                "dimensions": {
+                        "width": 59,
+                        "height": 78,
+                        "floor_to_chair_height_cm": 47,
+                        "depth": 58,
+                        "weight": 9,
+                        "boxWidth": null,
+                        "boxHeight": null,
+                        "boxDepth": null,
+                        "qtyPerBox": 1,
+                        "rawText": "{\"width_cm\": 59,\"height_cm\": 78,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 58,\"weight_kg\": 9,\"box_width_cm\": null, \"box_height_cm\": null, \"box_depth_cm\": null, \"qty_per_box\": 1}"
+                }
+        }
+];
+
+        const CONTAINER_40FT_VOLUME = 67.5;
+
+        // Petite Vue App
+        const { createApp } = PetiteVue;
+        
+        createApp({
+            // State
+            productData: productData,
+            orders: {},
+            activeTab: 'products',
+            currentProductId: productData.length > 0 ? productData[0].productId : null,
+            currentOrderId: null,
+            activeOrderId: '',
+            currentImageIndex: 0,
+            searchQuery: '',
+            showAddProductModal: false,
+            activeOrderSummaryVisible: false,
+            newProduct: {
+                productId: '',
+                fabric: '',
+                price: 0,
+                quantity: 1
+            },
+            quickAdd: {
+                fabric: '',
+                price: 0,
+                quantity: 1
+            },
+            CONTAINER_40FT_VOLUME: CONTAINER_40FT_VOLUME,
+            
+            // Fabric picker state
+            showFabricPickerModal: false,
+            fabricSearchQuery: '',
+            fabricPickerTarget: null,
+            fabricPickerItem: null,
+            fabricData: [
+  {
+    "code": "FR AYA 010",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-010-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-010-700x700.jpg",
+    "alt_text": "FR AYA 010"
+  },
+  {
+    "code": "FR AYA 050",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-050-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-050-700x700.jpg",
+    "alt_text": "FR AYA 050"
+  },
+  {
+    "code": "FR AYA 110",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-110-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-110-700x700.jpg",
+    "alt_text": "FR AYA 110"
+  },
+  {
+    "code": "FR AYA 150",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-150-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-150-700x700.jpg",
+    "alt_text": "FR AYA 150"
+  },
+  {
+    "code": "FR AYA 260",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-260-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-260-700x700.jpg",
+    "alt_text": "FR AYA 260"
+  },
+  {
+    "code": "FR AYA 550",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-550-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-550-700x700.jpg",
+    "alt_text": "FR AYA 550"
+  },
+  {
+    "code": "FR AYA 560",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-560-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-560-700x700.jpg",
+    "alt_text": "FR AYA 560"
+  },
+  {
+    "code": "FR AYA 600",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-600-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-600-700x700.jpg",
+    "alt_text": "FR AYA 600"
+  },
+  {
+    "code": "FR AYA 900",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-900-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/aya/fr-aya-fr-900-700x700.jpg",
+    "alt_text": "FR AYA 900"
+  },
+  {
+    "code": "FR BABF 02",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-02-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-02-700x700.jpg",
+    "alt_text": "FR BABF 02"
+  },
+  {
+    "code": "FR BABF 06",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-06-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-06-700x700.jpg",
+    "alt_text": "FR BABF 06"
+  },
+  {
+    "code": "FR BABF 08",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-08-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-08-700x700.jpg",
+    "alt_text": "FR BABF 08"
+  },
+  {
+    "code": "FR BABF 10",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-10-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-10-700x700.jpg",
+    "alt_text": "FR BABF 10"
+  },
+  {
+    "code": "FR BABF 11",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-11-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-11-700x700.jpg",
+    "alt_text": "FR BABF 11"
+  },
+  {
+    "code": "FR BABF 13",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-13-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-13-700x700.jpg",
+    "alt_text": "FR BABF 13"
+  },
+  {
+    "code": "FR BABF 21",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-21-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-21-700x700.jpg",
+    "alt_text": "FR BABF 21"
+  },
+  {
+    "code": "FR BABF 23",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-23-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-23-700x700.jpg",
+    "alt_text": "FR BABF 23"
+  },
+  {
+    "code": "FR BABF 34",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-34-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/babyface/fr-babyface-34-700x700.jpg",
+    "alt_text": "FR BABF 34"
+  },
+  {
+    "code": "FR BEY 040",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-040-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-040-700x700.jpg",
+    "alt_text": "FR BEY 040"
+  },
+  {
+    "code": "FR BEY 310",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-310-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-310-700x700.jpg",
+    "alt_text": "FR BEY 310"
+  },
+  {
+    "code": "FR BEY 420",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-420-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-420-700x700.jpg",
+    "alt_text": "FR BEY 420"
+  },
+  {
+    "code": "FR BEY 550",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-550-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-550-700x700.jpg",
+    "alt_text": "FR BEY 550"
+  },
+  {
+    "code": "FR BEY 600",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-600-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-600-700x700.jpg",
+    "alt_text": "FR BEY 600"
+  },
+  {
+    "code": "FR BEY 650",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-650-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/beyoglu/fr-beyoglu-650-700x700.jpg",
+    "alt_text": "FR BEY 650"
+  },
+  {
+    "code": "FR CAM 030",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-030-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-030-700x700.jpg",
+    "alt_text": "FR CAM 030"
+  },
+  {
+    "code": "FR CAM 110",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-110-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-110-700x700.jpg",
+    "alt_text": "FR CAM 110"
+  },
+  {
+    "code": "FR CAM 250",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-250-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-250-700x700.jpg",
+    "alt_text": "FR CAM 250"
+  },
+  {
+    "code": "FR CAM 320",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-320-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-320-700x700.jpg",
+    "alt_text": "FR CAM 320"
+  },
+  {
+    "code": "FR CAM 420",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-420-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-420-700x700.jpg",
+    "alt_text": "FR CAM 420"
+  },
+  {
+    "code": "FR CAM 560",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-560-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-560-700x700.jpg",
+    "alt_text": "FR CAM 560"
+  },
+  {
+    "code": "FR CAM 600",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-600-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/camlica/fr-camlica-600-700x700.jpg",
+    "alt_text": "FR CAM 600"
+  },
+  {
+    "code": "FR HAR 010",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-010-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-010-700x700.jpg",
+    "alt_text": "FR HAR 010"
+  },
+  {
+    "code": "FR HAR 030",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-030-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-030-700x700.jpg",
+    "alt_text": "FR HAR 030"
+  },
+  {
+    "code": "FR HAR 040",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-040-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-040-700x700.jpg",
+    "alt_text": "FR HAR 040"
+  },
+  {
+    "code": "FR HAR 110",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-110-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-110-700x700.jpg",
+    "alt_text": "FR HAR 110"
+  },
+  {
+    "code": "FR HAR 320",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-320-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-320-700x700.jpg",
+    "alt_text": "FR HAR 320"
+  },
+  {
+    "code": "FR HAR 390",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-390-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-390-700x700.jpg",
+    "alt_text": "FR HAR 390"
+  },
+  {
+    "code": "FR HAR 420",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-420-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-420-700x700.jpg",
+    "alt_text": "FR HAR 420"
+  },
+  {
+    "code": "FR HAR 650",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-650-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/harbiye/fr-harbiye-650-700x700.jpg",
+    "alt_text": "FR HAR 650"
+  },
+  {
+    "code": "FR KAB 030",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-030-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-030-700x700.jpg",
+    "alt_text": "FR KAB 030"
+  },
+  {
+    "code": "FR KAB 050",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-050-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-050-700x700.jpg",
+    "alt_text": "FR KAB 050"
+  },
+  {
+    "code": "FR KAB 260",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-260-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-260-700x700.jpg",
+    "alt_text": "FR KAB 260"
+  },
+  {
+    "code": "FR KAB 310",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-310-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-310-700x700.jpg",
+    "alt_text": "FR KAB 310"
+  },
+  {
+    "code": "FR KAB 320",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-320-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-320-700x700.jpg",
+    "alt_text": "FR KAB 320"
+  },
+  {
+    "code": "FR KAB 550",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-550-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-550-700x700.jpg",
+    "alt_text": "FR KAB 550"
+  },
+  {
+    "code": "FR KAB 560",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-560-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-560-700x700.jpg",
+    "alt_text": "FR KAB 560"
+  },
+  {
+    "code": "FR KAB 900",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-900-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kabatas/fr-kabatas-900-700x700.jpg",
+    "alt_text": "FR KAB 900"
+  },
+  {
+    "code": "FR KAR 015",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-015-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-015-700x700.jpg",
+    "alt_text": "FR KAR 015"
+  },
+  {
+    "code": "FR KAR 055",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-055-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-055-700x700.jpg",
+    "alt_text": "FR KAR 055"
+  },
+  {
+    "code": "FR KAR 315",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-315-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-315-700x700.jpg",
+    "alt_text": "FR KAR 315"
+  },
+  {
+    "code": "FR KAR 325",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-325-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-325-700x700.jpg",
+    "alt_text": "FR KAR 325"
+  },
+  {
+    "code": "FR KAR 355",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-355-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-355-700x700.jpg",
+    "alt_text": "FR KAR 355"
+  },
+  {
+    "code": "FR KAR 555",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-555-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-555-700x700.jpg",
+    "alt_text": "FR KAR 555"
+  },
+  {
+    "code": "FR KAR 615",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-615-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-615-700x700.jpg",
+    "alt_text": "FR KAR 615"
+  },
+  {
+    "code": "FR KAR 655",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-655-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/karakoy/fr-karakoy-655-700x700.jpg",
+    "alt_text": "FR KAR 655"
+  },
+  {
+    "code": "FR KIL 001",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-001-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-001-700x700.jpg",
+    "alt_text": "FR KIL 001"
+  },
+  {
+    "code": "FR KIL 050",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-050-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-050-700x700.jpg",
+    "alt_text": "FR KIL 050"
+  },
+  {
+    "code": "FR KIL 110",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-110-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-110-700x700.jpg",
+    "alt_text": "FR KIL 110"
+  },
+  {
+    "code": "FR KIL 200",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-200-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-200-700x700.jpg",
+    "alt_text": "FR KIL 200"
+  },
+  {
+    "code": "FR KIL 320",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-320-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-320-700x700.jpg",
+    "alt_text": "FR KIL 320"
+  },
+  {
+    "code": "FR KIL 420",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-420-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-420-700x700.jpg",
+    "alt_text": "FR KIL 420"
+  },
+  {
+    "code": "FR KIL 540",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-540-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-540-700x700.jpg",
+    "alt_text": "FR KIL 540"
+  },
+  {
+    "code": "FR KIL 560",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-560-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-560-700x700.jpg",
+    "alt_text": "FR KIL 560"
+  },
+  {
+    "code": "FR KIL 600",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-600-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-600-700x700.jpg",
+    "alt_text": "FR KIL 600"
+  },
+  {
+    "code": "FR KIL 650",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-650-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/kilyos/fr-kilyos-650-700x700.jpg",
+    "alt_text": "FR KIL 650"
+  },
+  {
+    "code": "FR RUM 010",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-030-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-030-700x700.jpg",
+    "alt_text": "FR RUM 010"
+  },
+  {
+    "code": "FR RUM 050",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-050-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-050-700x700.jpg",
+    "alt_text": "FR RUM 050"
+  },
+  {
+    "code": "FR RUM 140",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-140-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-140-700x700.jpg",
+    "alt_text": "FR RUM 140"
+  },
+  {
+    "code": "FR RUM 250",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-250-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-250-700x700.jpg",
+    "alt_text": "FR RUM 250"
+  },
+  {
+    "code": "FR RUM 360",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-360-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-360-700x700.jpg",
+    "alt_text": "FR RUM 360"
+  },
+  {
+    "code": "FR RUM 540",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-540-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-540-700x700.jpg",
+    "alt_text": "FR RUM 540"
+  },
+  {
+    "code": "FR RUM 630",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-630-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/FR-700/rumeli/fr-rumeli-630-700x700.jpg",
+    "alt_text": "FR RUM 630"
+  },
+  {
+    "code": "GDR BUK 02",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-02-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-02-700x700.jpg",
+    "alt_text": "GDR BUK 02"
+  },
+  {
+    "code": "GDR BUK 04",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-04-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-04-700x700.jpg",
+    "alt_text": "GDR BUK 04"
+  },
+  {
+    "code": "GDR BUK 05",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-05-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-05-700x700.jpg",
+    "alt_text": "GDR BUK 05"
+  },
+  {
+    "code": "GDR BUK 07",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-07-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-07-700x700.jpg",
+    "alt_text": "GDR BUK 07"
+  },
+  {
+    "code": "GDR BUK 11",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-11-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-11-700x700.jpg",
+    "alt_text": "GDR BUK 11"
+  },
+  {
+    "code": "GDR BUK 13",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-13-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-13-700x700.jpg",
+    "alt_text": "GDR BUK 13"
+  },
+  {
+    "code": "GDR BUK 15",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-15-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-15-700x700.jpg",
+    "alt_text": "GDR BUK 15"
+  },
+  {
+    "code": "GDR BUK 16",
+    "thumbnail_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-16-80x80.jpg",
+    "high_res_url": "https://www.caris.com.tr/image/cache/catalog/fabric/GDR-700/gdr-bukle-16-700x700.jpg",
+    "alt_text": "GDR BUK 16"
+  }
+],
+
+            // Computed Properties
+            get withDimensions() {
+                return this.productData.filter(p => p.dimensions && p.dimensions.rawText && !p.dimensions.rawText.includes('Error')).length;
+            },
+
+            get totalImages() {
+                return this.productData.reduce((sum, p) => sum + (p.images ? p.images.length : 0), 0);
+            },
+
+            get filteredProducts() {
+                if (!this.searchQuery) return this.productData;
+                const query = this.searchQuery.toLowerCase();
+                return this.productData.filter(product => 
+                    product.productId.toLowerCase().includes(query) ||
+                    product.productName.toLowerCase().includes(query)
+                );
+            },
+
+            get currentProduct() {
+                return this.productData.find(p => p.productId === this.currentProductId);
+            },
+
+            get currentOrder() {
+                return this.orders[this.currentOrderId];
+            },
+
+            get activeOrder() {
+                return this.orders[this.activeOrderId];
+            },
+
+            get orderList() {
+                return Object.values(this.orders).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            },
+
+            get orderItemList() {
+                return this.currentOrder ? Object.values(this.currentOrder.items) : [];
+            },
+
+            get containerPercent() {
+                return this.currentOrder ? (this.calculateOrderVolume(this.currentOrder) / CONTAINER_40FT_VOLUME) * 100 : 0;
+            },
+
+            get activeOrderItemCount() {
+                return this.activeOrder ? Object.values(this.activeOrder.items).reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0) : 0;
+            },
+
+            get activeOrderTotal() {
+                return this.activeOrder ? this.calculateOrderTotal(this.activeOrder) : 0;
+            },
+
+            get activeOrderVolume() {
+                return this.activeOrder ? this.calculateOrderVolume(this.activeOrder) : 0;
+            },
+
+            get activeOrderContainerPercent() {
+                return this.activeOrder ? (this.calculateOrderVolume(this.activeOrder) / CONTAINER_40FT_VOLUME) * 100 : 0;
+            },
+
+            // Methods
+            mounted() {
+                this.loadOrders();
+            },
+
+            loadOrders() {
+                const savedOrders = localStorage.getItem('caris_orders');
+                if (savedOrders) {
+                    this.orders = JSON.parse(savedOrders);
+                }
+                
+                const savedActiveOrderId = localStorage.getItem('caris_active_order');
+                if (savedActiveOrderId && this.orders[savedActiveOrderId]) {
+                    this.activeOrderId = savedActiveOrderId;
+                }
+            },
+
+            saveOrders() {
+                localStorage.setItem('caris_orders', JSON.stringify(this.orders));
+                localStorage.setItem('caris_active_order', this.activeOrderId);
+            },
+
+            switchTab(tabName) {
+                this.activeTab = tabName;
+            },
+
+            selectProduct(productId) {
+                this.currentProductId = productId;
+                this.currentImageIndex = 0;
+            },
+
+            selectOrder(orderId) {
+                this.currentOrderId = orderId;
+            },
+
+            createNewOrder() {
+                const orderId = 'ORDER_' + Date.now();
+                const newOrder = {
+                    id: orderId,
+                    name: `Order ${Object.keys(this.orders).length + 1}`,
+                    items: {},
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.orders[orderId] = newOrder;
+                this.selectOrder(orderId);
+                this.switchTab('orders');
+                this.saveOrders();
+            },
+
+            deleteOrder(orderId) {
+                if (confirm('Are you sure you want to delete this order?')) {
+                    delete this.orders[orderId];
+                    
+                    if (this.currentOrderId === orderId) {
+                        this.currentOrderId = null;
+                    }
+                    
+                    if (this.activeOrderId === orderId) {
+                        this.activeOrderId = '';
+                    }
+                    
+                    this.saveOrders();
+                }
+            },
+
+            calculateOrderTotal(order) {
+                let total = 0;
+                Object.values(order.items).forEach(item => {
+                    const price = parseFloat(item.price) || 0;
+                    const quantity = parseInt(item.quantity) || 0;
+                    total += price * quantity;
+                });
+                return total;
+            },
+
+            calculateOrderVolume(order) {
+                let totalVolume = 0;
+                Object.values(order.items).forEach(item => {
+                    const product = this.productData.find(p => p.productId === item.productId);
+                    if (product && product.dimensions) {
+                        const boxVolume = (product.dimensions.boxWidth || 0) * 
+                                         (product.dimensions.boxHeight || 0) * 
+                                         (product.dimensions.boxDepth || 0) / 1000000; // Convert cm³ to m³
+                        const qtyPerBox = product.dimensions.qtyPerBox || 1;
+                        const boxes = Math.ceil((parseInt(item.quantity) || 0) / qtyPerBox);
+                        totalVolume += boxVolume * boxes;
+                    }
+                });
+                return totalVolume;
+            },
+
+            calculateItemVolume(item) {
+                const product = this.productData.find(p => p.productId === item.productId);
+                if (product && product.dimensions && product.dimensions.boxWidth && product.dimensions.boxHeight && product.dimensions.boxDepth) {
+                    const boxVolume = (product.dimensions.boxWidth * product.dimensions.boxHeight * product.dimensions.boxDepth) / 1000000;
+                    const qtyPerBox = product.dimensions.qtyPerBox || 1;
+                    const boxes = Math.ceil((parseInt(item.quantity) || 0) / qtyPerBox);
+                    return boxVolume * boxes;
+                }
+                return 0;
+            },
+
+            getProduct(productId) {
+                return this.productData.find(p => p.productId === productId) || { productName: 'Unknown Product', images: [] };
+            },
+
+            changeImage(direction) {
+                if (!this.currentProduct || !this.currentProduct.images || this.currentProduct.images.length <= 1) return;
+                this.currentImageIndex = (this.currentImageIndex + direction + this.currentProduct.images.length) % this.currentProduct.images.length;
+            },
+
+            addProductFromModal() {
+                if (!this.currentOrderId || !this.newProduct.productId) return;
+                
+                const order = this.orders[this.currentOrderId];
+                if (!order) return;
+
+                order.items[this.newProduct.productId] = {
+                    productId: this.newProduct.productId,
+                    fabric: this.newProduct.fabric,
+                    price: this.newProduct.price,
+                    quantity: this.newProduct.quantity
+                };
+
+                this.showAddProductModal = false;
+                this.newProduct = {
+                    productId: '',
+                    fabric: '',
+                    price: 0,
+                    quantity: 1
+                };
+                
+                this.saveOrders();
+            },
+
+            removeFromOrder(productId) {
+                if (!this.currentOrderId) return;
+                const order = this.orders[this.currentOrderId];
+                if (!order) return;
+                delete order.items[productId];
+                this.saveOrders();
+            },
+
+            quickAddToActiveOrder() {
+                if (!this.activeOrderId || !this.currentProductId) return;
+                
+                const order = this.orders[this.activeOrderId];
+                if (!order) return;
+
+                order.items[this.currentProductId] = {
+                    productId: this.currentProductId,
+                    fabric: this.quickAdd.fabric,
+                    price: this.quickAdd.price,
+                    quantity: this.quickAdd.quantity
+                };
+
+                this.quickAdd = {
+                    fabric: '',
+                    price: 0,
+                    quantity: 1
+                };
+                
+                this.saveOrders();
+            },
+
+            toggleActiveOrderSummary() {
+                this.activeOrderSummaryVisible = !this.activeOrderSummaryVisible;
+            }
+        }).mount();
+    </script>
+</body>
+</html>

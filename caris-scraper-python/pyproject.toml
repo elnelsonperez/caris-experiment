@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "caris-scraper-python"
+version = "1.0.0"
+description = "Python scraper for Caris furniture product pages"
+dependencies = [
+    "playwright>=1.40.0",
+    "requests>=2.31.0",
+]
+
+[project.scripts]
+caris-scraper = "cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
