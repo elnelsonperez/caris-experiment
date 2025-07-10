@@ -33,8 +33,8 @@
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1032",
     "productName": "RUST\u0130C / RUS 01",
     "images": [
-      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4563-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4548-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4563-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4550-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4547-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/RUST%C4%B0C/_MG_4549-1000x1000.jpg",
@@ -66,8 +66,9 @@
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=822",
     "productName": "HAMPTON / HMP 01",
     "images": [
-      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6294-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8313-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_6294-1000x1000.jpg",
+
       "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8317-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8315-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/HAMPTON/hmp%2001/_MG_8318-1000x1000.jpg",
@@ -130,8 +131,9 @@
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=988",
     "productName": "MARCUS / MRC 01",
     "images": [
-      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2382-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2374-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2382-1000x1000.jpg",
+
       "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2376-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2379-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MARCUS/_MG_2375-1000x1000.jpg",
@@ -290,8 +292,8 @@
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=101",
     "productName": "MADR\u0130D SIRT DESTEKL\u0130 SANDALYE / MRD 01",
     "images": [
-      "https://www.caris.com.tr/image/cache/catalog/uruns/mrd01-1-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MRD01_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/mrd01-1-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MRD01_2-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/mrd01-2-1000x1000.jpg"
     ],

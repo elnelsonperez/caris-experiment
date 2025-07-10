@@ -291,8 +291,8 @@ export default {
               background-color: #f8f9fa;
             }
             .product-img {
-              width: 40px;
-              height: 40px;
+              width: 80px;
+              height: 80px;
               object-fit: cover;
               border-radius: 4px;
               display: block;
@@ -300,11 +300,11 @@ export default {
             .fabric-cell {
               display: flex;
               align-items: center;
-              gap: 6px;
+              gap: 8px;
             }
             .fabric-img {
-              width: 30px;
-              height: 30px;
+              width: 60px;
+              height: 60px;
               object-fit: cover;
               border-radius: 3px;
               flex-shrink: 0;
@@ -352,8 +352,8 @@ export default {
               body { padding: 10px; }
               .order-table { font-size: 10px; }
               .header h1 { font-size: 20px; }
-              .product-img { width: 35px; height: 35px; }
-              .fabric-img { width: 25px; height: 25px; }
+              .product-img { width: 60px; height: 60px; }
+              .fabric-img { width: 45px; height: 45px; }
             }
           </style>
         </head>
@@ -370,10 +370,10 @@ export default {
           <table class="order-table">
             <thead>
               <tr>
-                <th style="width: 50px;">Image</th>
+                <th style="width: 90px;">Image</th>
                 <th style="width: 80px;">Product ID</th>
-                <th style="width: 200px;">Product Name</th>
-                <th style="width: 120px;">Fabric</th>
+                <th style="width: 180px;">Product Name</th>
+                <th style="width: 140px;">Fabric</th>
                 ${includePrices.value ? '<th style="width: 70px;">Price</th>' : ''}
                 <th style="width: 50px;">Qty</th>
                 ${includePrices.value ? '<th style="width: 70px;">Total</th>' : ''}
