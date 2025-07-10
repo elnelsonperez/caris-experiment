@@ -10,6 +10,16 @@
         <div class="export-actions no-print">
           <button @click="copyTable" class="btn btn-primary">Copy Table</button>
           <button @click="printTable" class="btn btn-secondary">Print</button>
+          <div class="export-options">
+            <label class="checkbox-label">
+              <input type="checkbox" v-model="includePrices" />
+              Include Prices
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" v-model="includeNotes" />
+              Include Notes
+            </label>
+          </div>
           <div v-if="copySuccess" class="copy-status">✓ Copied to clipboard!</div>
         </div>
         
@@ -18,7 +28,7 @@
             <h2>{{ order.name }}</h2>
             <div class="order-meta">
               <span>{{ itemCount }} items</span>
-              <span>{{ formatPrice(orderTotal) }}</span>
+              <span v-if="includePrices">{{ formatPrice(orderTotal) }}</span>
             </div>
           </div>
           
@@ -28,32 +38,35 @@
                 <th>Product ID</th>
                 <th>Product Name</th>
                 <th>Fabric</th>
-                <th>Price</th>
+                <th v-if="includePrices">Price</th>
                 <th>Quantity</th>
-                <th>Line Total</th>
+                <th v-if="includePrices">Line Total</th>
+                <th v-if="includeNotes">Notes</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in orderItems" :key="item.productId">
+              <tr v-for="item in orderItems" :key="item.itemId">
                 <td>{{ item.productId }}</td>
                 <td>{{ getProductName(item.productId) }}</td>
                 <td>{{ item.fabric }}</td>
-                <td>{{ formatPrice(item.price) }}</td>
+                <td v-if="includePrices">{{ formatPrice(item.price) }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ formatPrice(item.price * item.quantity) }}</td>
+                <td v-if="includePrices">{{ formatPrice(item.price * item.quantity) }}</td>
+                <td v-if="includeNotes">{{ item.notes || '-' }}</td>
               </tr>
             </tbody>
             <tfoot>
               <tr class="summary-row">
-                <td colspan="4"><strong>Order Total</strong></td>
+                <td :colspan="getColSpan()"><strong>Order Total</strong></td>
                 <td><strong>{{ totalQuantity }}</strong></td>
-                <td><strong>{{ formatPrice(orderTotal) }}</strong></td>
+                <td v-if="includePrices"><strong>{{ formatPrice(orderTotal) }}</strong></td>
+                <td v-if="includeNotes && !includePrices"></td>
               </tr>
             </tfoot>
           </table>
           
           <div class="order-summary-export">
-            <div class="summary-grid">
+            <div class="summary-grid" :class="{ 'two-columns': !includePrices }">
               <div class="summary-item">
                 <span class="label">Total Items:</span>
                 <span class="value">{{ itemCount }}</span>
@@ -62,7 +75,7 @@
                 <span class="label">Total Quantity:</span>
                 <span class="value">{{ totalQuantity }}</span>
               </div>
-              <div class="summary-item">
+              <div v-if="includePrices" class="summary-item">
                 <span class="label">Grand Total:</span>
                 <span class="value">{{ formatPrice(orderTotal) }}</span>
               </div>
@@ -95,6 +108,8 @@ export default {
     const ordersStore = useOrdersStore()
     const exportTable = ref(null)
     const copySuccess = ref(false)
+    const includePrices = ref(true)
+    const includeNotes = ref(true)
     
     const orderItems = computed(() => ordersStore.getOrderItemsWithId(props.order.id))
     const itemCount = computed(() => orderItems.value.length)
@@ -114,18 +129,39 @@ export default {
       return `€${price.toFixed(2)}`
     }
     
+    const getColSpan = () => {
+      let cols = 3 // Product ID, Product Name, Fabric
+      if (includePrices.value) cols += 1 // Price column
+      return cols
+    }
+    
     const copyTable = async () => {
       try {
         // Create tab-separated values for spreadsheet compatibility
-        let tsvContent = "Product ID\tProduct Name\tFabric\tPrice\tQuantity\tLine Total\n"
+        let tsvContent = ''
+        
+        // Build header
+        tsvContent += 'Product ID\tProduct Name\tFabric'
+        if (includePrices.value) tsvContent += '\tPrice'
+        tsvContent += '\tQuantity'
+        if (includePrices.value) tsvContent += '\tLine Total'
+        if (includeNotes.value) tsvContent += '\tNotes'
+        tsvContent += '\n'
         
         orderItems.value.forEach(item => {
-          const lineTotal = item.price * item.quantity
-          tsvContent += `${item.productId}\t${getProductName(item.productId)}\t${item.fabric}\t${formatPrice(item.price)}\t${item.quantity}\t${formatPrice(lineTotal)}\n`
+          let row = `${item.productId}\t${getProductName(item.productId)}\t${item.fabric}`
+          if (includePrices.value) row += `\t${formatPrice(item.price)}`
+          row += `\t${item.quantity}`
+          if (includePrices.value) row += `\t${formatPrice(item.price * item.quantity)}`
+          if (includeNotes.value) row += `\t${item.notes || ''}`
+          tsvContent += row + '\n'
         })
         
         // Add summary row
-        tsvContent += `\t\t\tOrder Total\t${totalQuantity.value}\t${formatPrice(orderTotal.value)}\n`
+        let summaryRow = '\t\t\tOrder Total\t' + totalQuantity.value
+        if (includePrices.value) summaryRow += `\t${formatPrice(orderTotal.value)}`
+        if (includeNotes.value) summaryRow += '\t'
+        tsvContent += summaryRow + '\n'
         
         await navigator.clipboard.writeText(tsvContent)
         copySuccess.value = true
@@ -167,7 +203,7 @@ export default {
         const productImage = productsStore.getProductById(item.productId)?.images[0] || ''
         const fabricImage = fabricsStore.getFabricByCode(item.fabric)?.thumbnail_url || ''
         
-        return `
+        let rowHTML = `
           <tr>
             <td>
               <img src="${productImage}" alt="${productName}" class="product-img" onerror="this.style.display='none'">
@@ -179,12 +215,25 @@ export default {
                 <img src="${fabricImage}" alt="${item.fabric}" class="fabric-img" onerror="this.style.display='none'">
                 <span>${item.fabric}</span>
               </div>
-            </td>
-            <td class="price">${formatPrice(item.price)}</td>
-            <td class="quantity">${item.quantity}</td>
-            <td class="price">${formatPrice(item.price * item.quantity)}</td>
-          </tr>
-        `
+            </td>`
+        
+        if (includePrices.value) {
+          rowHTML += `<td class="price">${formatPrice(item.price)}</td>`
+        }
+        
+        rowHTML += `<td class="quantity">${item.quantity}</td>`
+        
+        if (includePrices.value) {
+          rowHTML += `<td class="price">${formatPrice(item.price * item.quantity)}</td>`
+        }
+        
+        if (includeNotes.value) {
+          rowHTML += `<td class="notes">${item.notes || '-'}</td>`
+        }
+        
+        rowHTML += `</tr>`
+        
+        return rowHTML
       }).join('')
       
       return `
@@ -314,7 +363,7 @@ export default {
             <div class="header-info">
               <span><strong>${itemCount.value} Items</strong></span>
               <span><strong>${totalQuantity.value} Total Quantity</strong></span>
-              <span><strong>${formatPrice(orderTotal.value)} Total Value</strong></span>
+              ${includePrices.value ? `<span><strong>${formatPrice(orderTotal.value)} Total Value</strong></span>` : ''}
             </div>
           </div>
           
@@ -325,9 +374,10 @@ export default {
                 <th style="width: 80px;">Product ID</th>
                 <th style="width: 200px;">Product Name</th>
                 <th style="width: 120px;">Fabric</th>
-                <th style="width: 70px;">Price</th>
+                ${includePrices.value ? '<th style="width: 70px;">Price</th>' : ''}
                 <th style="width: 50px;">Qty</th>
-                <th style="width: 70px;">Total</th>
+                ${includePrices.value ? '<th style="width: 70px;">Total</th>' : ''}
+                ${includeNotes.value ? '<th style="width: 150px;">Notes</th>' : ''}
               </tr>
             </thead>
             <tbody>
@@ -346,9 +396,7 @@ export default {
                 <div class="summary-value">${totalQuantity.value}</div>
               </div>
             </div>
-            <div class="total-section">
-              TOTAL: ${formatPrice(orderTotal.value)}
-            </div>
+            ${includePrices.value ? `<div class="total-section">TOTAL: ${formatPrice(orderTotal.value)}</div>` : ''}
           </div>
         </body>
         </html>
@@ -358,12 +406,15 @@ export default {
     return {
       exportTable,
       copySuccess,
+      includePrices,
+      includeNotes,
       orderItems,
       itemCount,
       orderTotal,
       totalQuantity,
       getProductName,
       formatPrice,
+      getColSpan,
       copyTable,
       printTable
     }
@@ -385,6 +436,26 @@ export default {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #e9ecef;
+}
+
+.export-options {
+  margin-left: auto;
+  display: flex;
+  gap: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
 }
 
 .copy-status {
@@ -466,6 +537,10 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
+}
+
+.summary-grid.two-columns {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .summary-item {

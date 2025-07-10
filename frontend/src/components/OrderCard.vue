@@ -56,6 +56,7 @@
           <div class="col-subtotal">Subtotal</div>
           <div class="col-volume">Volume</div>
           <div class="col-weight">Weight</div>
+          <div class="col-notes">Notes</div>
           <div class="col-actions">Actions</div>
         </div>
         
@@ -142,6 +143,18 @@
           </div>
           <div class="col-weight">
             <span class="weight-value">{{ formatWeight(getItemWeight(item)) }}</span>
+          </div>
+          <div class="col-notes">
+            <textarea 
+              v-if="editingItem?.itemId === item.itemId"
+              v-model="editNotes"
+              class="notes-input"
+              placeholder="Add notes..."
+              @change="updateEditingItem"
+            ></textarea>
+            <div v-else class="notes-display" @click="startEdit(item)">
+              {{ item.notes || 'Click to add notes...' }}
+            </div>
           </div>
           <div class="col-actions">
             <div v-if="editingItem?.itemId === item.itemId" class="edit-actions">
@@ -287,6 +300,7 @@ export default {
     const viewingFabric = ref(null)
     const editPrice = ref(0)
     const editQuantity = ref(1)
+    const editNotes = ref('')
     const fabricPickerForItem = ref(null)
     const zoomedImageId = ref(null)
     const zoomOverlayStyle = ref({})
@@ -378,19 +392,22 @@ export default {
       editingItem.value = item
       editPrice.value = item.price
       editQuantity.value = item.quantity
+      editNotes.value = item.notes || ''
     }
     
     const cancelEdit = () => {
       editingItem.value = null
       editPrice.value = 0
       editQuantity.value = 1
+      editNotes.value = ''
     }
     
     const saveEdit = () => {
       if (editingItem.value) {
         ordersStore.updateOrderItem(props.order.id, editingItem.value.itemId, {
           price: parseFloat(editPrice.value),
-          quantity: parseInt(editQuantity.value)
+          quantity: parseInt(editQuantity.value),
+          notes: editNotes.value
         })
         editingItem.value = null
       }
@@ -401,7 +418,8 @@ export default {
       if (editingItem.value) {
         ordersStore.updateOrderItem(props.order.id, editingItem.value.itemId, {
           price: parseFloat(editPrice.value),
-          quantity: parseInt(editQuantity.value)
+          quantity: parseInt(editQuantity.value),
+          notes: editNotes.value
         })
       }
     }
@@ -485,6 +503,7 @@ export default {
       viewingFabric,
       editPrice,
       editQuantity,
+      editNotes,
       fabricPickerForItem,
       showExportModal,
       containerType,
@@ -677,7 +696,7 @@ export default {
 
 .table-header {
   display: grid;
-  grid-template-columns: 60px 2.5fr 1.5fr 0.8fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr;
+  grid-template-columns: 60px 2fr 1.2fr 0.7fr 0.5fr 0.7fr 0.7fr 0.7fr 1.5fr 1fr;
   gap: 1rem;
   padding: 1rem 1.5rem;
   background: #f8f9fa;
@@ -691,7 +710,7 @@ export default {
 
 .table-row {
   display: grid;
-  grid-template-columns: 60px 2.5fr 1.5fr 0.8fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr;
+  grid-template-columns: 60px 2fr 1.2fr 0.7fr 0.5fr 0.7fr 0.7fr 0.7fr 1.5fr 1fr;
   gap: 1rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #f1f3f4;
@@ -898,6 +917,41 @@ export default {
 }
 
 .btn-fabric-change:hover {
+  background: #e9ecef;
+  border-color: #3498db;
+}
+
+.notes-input {
+  width: 100%;
+  min-height: 60px;
+  padding: 0.5rem;
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  resize: vertical;
+  background: white;
+}
+
+.notes-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.notes-display {
+  padding: 0.5rem;
+  min-height: 40px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow-wrap: break-word;
+}
+
+.notes-display:hover {
   background: #e9ecef;
   border-color: #3498db;
 }

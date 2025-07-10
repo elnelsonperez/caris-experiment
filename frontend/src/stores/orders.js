@@ -135,7 +135,7 @@ export const useOrdersStore = defineStore('orders', {
       this.containerType = type
       this.saveToStorage()
     },
-    addToOrder(orderId, productId, { fabric, price, quantity }) {
+    addToOrder(orderId, productId, { fabric, price, quantity, notes = '' }) {
       if (!this.orders[orderId]) return
       
       // Generate unique item ID based on product + fabric + timestamp
@@ -145,7 +145,8 @@ export const useOrdersStore = defineStore('orders', {
         productId, 
         fabric, 
         price: Number(price), 
-        quantity: Number(quantity) 
+        quantity: Number(quantity),
+        notes: notes || ''
       }
       this.orders[orderId].updatedAt = Date.now()
       this.saveToStorage()
@@ -225,10 +226,16 @@ export const useOrdersStore = defineStore('orders', {
               if (itemKey === item.productId && !itemKey.includes('_')) {
                 // Generate new itemId for migrated data
                 const newItemId = `${item.productId}_${item.fabric}_migrated_${Date.now()}`
-                newItems[newItemId] = item
+                newItems[newItemId] = {
+                  ...item,
+                  notes: item.notes || '' // Ensure notes field exists
+                }
               } else {
-                // Already new format, keep as is
-                newItems[itemKey] = item
+                // Already new format, ensure notes field exists
+                newItems[itemKey] = {
+                  ...item,
+                  notes: item.notes || ''
+                }
               }
             }
             
