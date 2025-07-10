@@ -16,30 +16,43 @@
           >
         </div>
         
-        <!-- Fabric Grid -->
-        <div class="fabric-grid">
+        <!-- Grouped Fabric Display -->
+        <div class="fabric-groups-container">
           <div 
-            v-for="fabric in filteredFabrics" 
-            :key="fabric.code"
-            class="fabric-item"
-            @click="selectFabric(fabric)"
+            v-for="(fabrics, materialType) in groupedFabrics" 
+            :key="materialType"
+            class="fabric-group"
           >
-            <div class="fabric-image-container">
-              <img 
-                :src="fabric.high_res_url" 
-                :alt="fabric.alt_text"
-                class="fabric-image"
-                @error="handleImageError"
-              >
+            <div class="group-header">
+              <h4 class="material-name">{{ materialType }}</h4>
+              <span class="fabric-count">{{ fabrics.length }} fabrics</span>
             </div>
-            <div class="fabric-info">
-              <div class="fabric-code">{{ fabric.code }}</div>
+            
+            <div class="fabric-grid">
+              <div 
+                v-for="fabric in fabrics" 
+                :key="fabric.code"
+                class="fabric-item"
+                @click="selectFabric(fabric)"
+              >
+                <div class="fabric-image-container">
+                  <img 
+                    :src="fabric.high_res_url" 
+                    :alt="fabric.alt_text"
+                    class="fabric-image"
+                    @error="handleImageError"
+                  >
+                  <div class="fabric-overlay">
+                    <div class="fabric-code">{{ fabric.code }}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         
         <!-- Empty State -->
-        <div v-if="filteredFabrics.length === 0" class="text-center p-4">
+        <div v-if="Object.keys(groupedFabrics).length === 0" class="text-center p-4">
           <p class="text-muted">No fabrics found matching your search.</p>
         </div>
       </div>
@@ -63,6 +76,7 @@ export default {
     })
     
     const filteredFabrics = computed(() => fabricsStore.filteredFabrics)
+    const groupedFabrics = computed(() => fabricsStore.groupedFabrics)
     
     const selectFabric = (fabric) => {
       emit('fabric-selected', fabric)
@@ -75,6 +89,7 @@ export default {
     return {
       searchQuery,
       filteredFabrics,
+      groupedFabrics,
       selectFabric,
       handleImageError
     }
@@ -99,92 +114,129 @@ export default {
   flex-direction: column;
 }
 
-.fabric-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  padding: 1rem 0;
+.fabric-groups-container {
   flex: 1;
   overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.fabric-group {
+  margin-bottom: 2rem;
+}
+
+.fabric-group:last-child {
+  margin-bottom: 0;
+}
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  border-radius: 0.5rem;
+  color: white;
+}
+
+.material-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.fabric-count {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.fabric-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
   align-items: start;
   justify-items: stretch;
 }
 
 .fabric-item {
-  background: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
   cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 300px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .fabric-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.fabric-item:active {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+.fabric-item:hover .fabric-overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+}
+
+.fabric-item:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
 .fabric-image-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
   background: #f8f9fa;
-  min-height: 0;
+  overflow: hidden;
 }
 
 .fabric-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0.5rem;
   background-color: white;
 }
 
-.fabric-info {
-  padding: 0.5rem 0.75rem;
-  background: #2c3e50;
-  border-top: 1px solid #f1f3f4;
-  flex-shrink: 0;
+.fabric-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+  padding: 0.5rem;
+  pointer-events: none;
 }
 
 .fabric-code {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1;
 }
 
 /* Custom Scrollbar */
-.fabric-grid::-webkit-scrollbar {
+.fabric-groups-container::-webkit-scrollbar {
   width: 8px;
 }
 
-.fabric-grid::-webkit-scrollbar-track {
+.fabric-groups-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.fabric-grid::-webkit-scrollbar-thumb {
+.fabric-groups-container::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 4px;
 }
 
-.fabric-grid::-webkit-scrollbar-thumb:hover {
+.fabric-groups-container::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
 
