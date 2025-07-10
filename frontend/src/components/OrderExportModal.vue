@@ -78,6 +78,7 @@
 import { ref, computed } from 'vue'
 import { useProductsStore } from '@/stores/products'
 import { useFabricsStore } from '@/stores/fabrics'
+import { useOrdersStore } from '@/stores/orders'
 
 export default {
   name: 'OrderExportModal',
@@ -91,10 +92,11 @@ export default {
   setup(props) {
     const productsStore = useProductsStore()
     const fabricsStore = useFabricsStore()
+    const ordersStore = useOrdersStore()
     const exportTable = ref(null)
     const copySuccess = ref(false)
     
-    const orderItems = computed(() => Object.values(props.order.items))
+    const orderItems = computed(() => ordersStore.getOrderItemsWithId(props.order.id))
     const itemCount = computed(() => orderItems.value.length)
     const orderTotal = computed(() => 
       orderItems.value.reduce((sum, item) => sum + (item.price * item.quantity), 0)

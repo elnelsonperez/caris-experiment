@@ -59,14 +59,29 @@
           <div class="col-actions">Actions</div>
         </div>
         
-        <div class="table-row" v-for="item in orderItems" :key="item.productId">
+        <div class="table-row" v-for="item in orderItems" :key="item.itemId">
           <div class="col-thumbnail">
-            <img 
-              :src="getProductImage(item.productId)" 
-              :alt="getProductName(item.productId)"
-              class="item-thumbnail"
-              @error="handleImageError"
-            >
+            <div class="thumbnail-container">
+              <img 
+                :src="getProductImage(item.productId)" 
+                :alt="getProductName(item.productId)"
+                class="item-thumbnail"
+                @error="handleImageError"
+                @mouseenter="showImageZoom(item.productId, $event)"
+                @mouseleave="hideImageZoom"
+              >
+              <div 
+                v-if="zoomedImageId === item.productId"
+                class="image-zoom-overlay"
+                :style="zoomOverlayStyle"
+              >
+                <img 
+                  :src="getProductImage(item.productId)" 
+                  :alt="getProductName(item.productId)"
+                  class="zoomed-image"
+                >
+              </div>
+            </div>
           </div>
           <div class="col-product">
             <div class="product-info" @click="openProductPage(item.productId)">
@@ -75,7 +90,7 @@
             </div>
           </div>
           <div class="col-fabric">
-            <div v-if="editingItem?.productId !== item.productId" class="fabric-preview" @click="viewFabric(item.fabric)">
+            <div v-if="editingItem?.itemId !== item.itemId" class="fabric-preview" @click="viewFabric(item.fabric)">
               <img 
                 :src="getFabricImage(item.fabric)" 
                 :alt="item.fabric"
@@ -98,7 +113,7 @@
           </div>
           <div class="col-price">
             <input 
-              v-if="editingItem?.productId === item.productId"
+              v-if="editingItem?.itemId === item.itemId"
               v-model="editPrice"
               type="number" 
               step="0.01" 
@@ -110,7 +125,7 @@
           </div>
           <div class="col-quantity">
             <input 
-              v-if="editingItem?.productId === item.productId"
+              v-if="editingItem?.itemId === item.itemId"
               v-model="editQuantity"
               type="number" 
               min="1"
@@ -129,7 +144,7 @@
             <span class="weight-value">{{ formatWeight(getItemWeight(item)) }}</span>
           </div>
           <div class="col-actions">
-            <div v-if="editingItem?.productId === item.productId" class="edit-actions">
+            <div v-if="editingItem?.itemId === item.itemId" class="edit-actions">
               <button @click="saveEdit()" class="mini-btn save">Save</button>
               <button @click="cancelEdit()" class="mini-btn cancel">Cancel</button>
             </div>
@@ -272,9 +287,11 @@ export default {
     const editPrice = ref(0)
     const editQuantity = ref(1)
     const fabricPickerForItem = ref(null)
+    const zoomedImageId = ref(null)
+    const zoomOverlayStyle = ref({})
     
     const isActive = computed(() => ordersStore.activeOrderId === props.order.id)
-    const orderItems = computed(() => Object.values(props.order.items))
+    const orderItems = computed(() => ordersStore.getOrderItemsWithId(props.order.id))
     const itemCount = computed(() => ordersStore.getOrderItemCount(props.order.id))
     const total = computed(() => ordersStore.getOrderTotal(props.order.id))
     const orderVolume = computed(() => ordersStore.getOrderVolume(props.order.id))
@@ -370,7 +387,7 @@ export default {
     
     const saveEdit = () => {
       if (editingItem.value) {
-        ordersStore.updateOrderItem(props.order.id, editingItem.value.productId, {
+        ordersStore.updateOrderItem(props.order.id, editingItem.value.itemId, {
           price: parseFloat(editPrice.value),
           quantity: parseInt(editQuantity.value)
         })
@@ -381,7 +398,7 @@ export default {
     const updateEditingItem = () => {
       // Auto-save changes for real-time updates
       if (editingItem.value) {
-        ordersStore.updateOrderItem(props.order.id, editingItem.value.productId, {
+        ordersStore.updateOrderItem(props.order.id, editingItem.value.itemId, {
           price: parseFloat(editPrice.value),
           quantity: parseInt(editQuantity.value)
         })
@@ -389,7 +406,7 @@ export default {
     }
     
     const getEditedSubtotal = (item) => {
-      if (editingItem.value?.productId === item.productId) {
+      if (editingItem.value?.itemId === item.itemId) {
         return parseFloat(editPrice.value) * parseInt(editQuantity.value)
       }
       return item.price * item.quantity
@@ -401,7 +418,7 @@ export default {
     
     const onFabricSelected = (fabric) => {
       if (fabricPickerForItem.value) {
-        ordersStore.updateOrderItem(props.order.id, fabricPickerForItem.value.productId, {
+        ordersStore.updateOrderItem(props.order.id, fabricPickerForItem.value.itemId, {
           fabric: fabric.code
         })
         fabricPickerForItem.value = null
@@ -411,7 +428,7 @@ export default {
     
     const removeItem = (item) => {
       if (confirm('Remove this item from the order?')) {
-        ordersStore.removeFromOrder(props.order.id, item.productId)
+        ordersStore.removeFromOrder(props.order.id, item.itemId)
       }
     }
     
@@ -429,6 +446,23 @@ export default {
       if (fabric) {
         viewingFabric.value = fabric
       }
+    }
+    
+    const showImageZoom = (productId, event) => {
+      const rect = event.target.getBoundingClientRect()
+      zoomedImageId.value = productId
+      zoomOverlayStyle.value = {
+        position: 'fixed',
+        top: `${rect.top}px`,
+        left: `${rect.right + 10}px`,
+        zIndex: 9999,
+        pointerEvents: 'none'
+      }
+    }
+    
+    const hideImageZoom = () => {
+      zoomedImageId.value = null
+      zoomOverlayStyle.value = {}
     }
     
     const openProductPage = (productId) => {
@@ -480,7 +514,11 @@ export default {
       openFabricPicker,
       onFabricSelected,
       removeItem,
-      toggleContainerType
+      toggleContainerType,
+      zoomedImageId,
+      zoomOverlayStyle,
+      showImageZoom,
+      hideImageZoom
     }
   }
 }
@@ -654,12 +692,43 @@ export default {
   background: #f8f9fa;
 }
 
+.thumbnail-container {
+  position: relative;
+  display: inline-block;
+}
+
 .item-thumbnail {
   width: 50px;
   height: 50px;
   object-fit: cover;
   border-radius: 0.25rem;
   background: white;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.item-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.image-zoom-overlay {
+  position: fixed;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  max-height: 300px;
+}
+
+.zoomed-image {
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .product-info {

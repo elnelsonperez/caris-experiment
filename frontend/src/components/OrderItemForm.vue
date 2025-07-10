@@ -132,23 +132,22 @@ export default {
     }
     
     const updateItem = () => {
-      ordersStore.updateOrderItem(props.orderId, props.item.productId, {
+      ordersStore.updateOrderItem(props.orderId, props.item.itemId, {
         price: parseFloat(editPrice.value),
         quantity: parseInt(editQuantity.value)
       })
     }
     
     const onFabricSelected = (fabric) => {
-      ordersStore.updateOrderItem(props.orderId, props.item.productId, {
+      ordersStore.updateOrderItem(props.orderId, props.item.itemId, {
         fabric: fabric.code
       })
       showFabricPicker.value = false
     }
     
     const duplicateItem = () => {
-      // Generate a unique key for the duplicate
-      const duplicateKey = `${props.item.productId}_${Date.now()}`
-      ordersStore.addToOrder(props.orderId, duplicateKey, {
+      // addToOrder expects productId as second parameter, not itemId
+      ordersStore.addToOrder(props.orderId, props.item.productId, {
         fabric: props.item.fabric,
         price: props.item.price,
         quantity: props.item.quantity
@@ -157,7 +156,7 @@ export default {
     
     const removeItem = () => {
       if (confirm('Remove this item from the order?')) {
-        ordersStore.removeFromOrder(props.orderId, props.item.productId)
+        ordersStore.removeFromOrder(props.orderId, props.item.itemId)
       }
     }
     

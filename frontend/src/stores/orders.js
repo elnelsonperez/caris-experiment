@@ -20,6 +20,14 @@ export const useOrdersStore = defineStore('orders', {
   getters: {
     orderList: (state) => Object.values(state.orders),
     activeOrder: (state) => state.orders[state.activeOrderId],
+    getOrderItemsWithId: (state) => (orderId) => {
+      const order = state.orders[orderId]
+      if (!order) return []
+      return Object.entries(order.items).map(([itemId, item]) => ({
+        ...item,
+        itemId
+      }))
+    },
     getOrderTotal: (state) => (orderId) => {
       const order = state.orders[orderId]
       if (!order) return 0
@@ -127,7 +135,11 @@ export const useOrdersStore = defineStore('orders', {
     },
     addToOrder(orderId, productId, { fabric, price, quantity }) {
       if (!this.orders[orderId]) return
-      this.orders[orderId].items[productId] = { 
+      
+      // Generate unique item ID based on product + fabric + timestamp
+      const itemId = `${productId}_${fabric}_${Date.now()}`
+      
+      this.orders[orderId].items[itemId] = { 
         productId, 
         fabric, 
         price: Number(price), 
@@ -136,16 +148,16 @@ export const useOrdersStore = defineStore('orders', {
       this.orders[orderId].updatedAt = Date.now()
       this.saveToStorage()
     },
-    updateOrderItem(orderId, productId, updates) {
-      if (this.orders[orderId]?.items[productId]) {
-        Object.assign(this.orders[orderId].items[productId], updates)
+    updateOrderItem(orderId, itemId, updates) {
+      if (this.orders[orderId]?.items[itemId]) {
+        Object.assign(this.orders[orderId].items[itemId], updates)
         this.orders[orderId].updatedAt = Date.now()
         this.saveToStorage()
       }
     },
-    removeFromOrder(orderId, productId) {
-      if (this.orders[orderId]?.items[productId]) {
-        delete this.orders[orderId].items[productId]
+    removeFromOrder(orderId, itemId) {
+      if (this.orders[orderId]?.items[itemId]) {
+        delete this.orders[orderId].items[itemId]
         this.orders[orderId].updatedAt = Date.now()
         this.saveToStorage()
       }
@@ -172,9 +184,60 @@ export const useOrdersStore = defineStore('orders', {
           const data = JSON.parse(saved)
           this.orders = data.orders || {}
           this.activeOrderId = data.activeOrderId || null
+          
+          // Migration: Convert old format to new format
+          this.migrateOrdersFormat()
         }
       } catch (error) {
         console.error('Failed to load orders from localStorage:', error)
+      }
+    },
+    
+    migrateOrdersFormat() {
+      let needsMigration = false
+      
+      // Check if any orders need migration (old format uses productId as key)
+      for (const [orderId, order] of Object.entries(this.orders)) {
+        if (order.items) {
+          for (const [itemKey, item] of Object.entries(order.items)) {
+            // Old format: itemKey equals productId
+            // New format: itemKey is composite (productId_fabric_timestamp)
+            if (itemKey === item.productId && !itemKey.includes('_')) {
+              needsMigration = true
+              break
+            }
+          }
+        }
+        if (needsMigration) break
+      }
+      
+      if (needsMigration) {
+        console.log('Migrating orders to new format...')
+        
+        for (const [orderId, order] of Object.entries(this.orders)) {
+          if (order.items) {
+            const newItems = {}
+            
+            for (const [itemKey, item] of Object.entries(order.items)) {
+              // Check if this is old format (itemKey equals productId)
+              if (itemKey === item.productId && !itemKey.includes('_')) {
+                // Generate new itemId for migrated data
+                const newItemId = `${item.productId}_${item.fabric}_migrated_${Date.now()}`
+                newItems[newItemId] = item
+              } else {
+                // Already new format, keep as is
+                newItems[itemKey] = item
+              }
+            }
+            
+            this.orders[orderId].items = newItems
+            this.orders[orderId].updatedAt = Date.now()
+          }
+        }
+        
+        // Save migrated data
+        this.saveToStorage()
+        console.log('Orders migration completed')
       }
     }
   }
