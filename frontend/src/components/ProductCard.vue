@@ -54,7 +54,17 @@ export default {
     )
     
     const formatPrice = (price) => {
-      return price > 0 ? `€${price.toFixed(2)}` : 'No price set'
+      if (price > 0) {
+        // Check if this is a default price from invoice data
+        const hasUserPrice = productsStore.productPrices[props.product.productId]
+        const defaultPrice = productsStore.getDefaultPrice(props.product.productId)
+        
+        if (!hasUserPrice && defaultPrice > 0) {
+          return `€${price.toFixed(2)} (default)`
+        }
+        return `€${price.toFixed(2)}`
+      }
+      return 'No price set'
     }
     
     const openProduct = (event) => {

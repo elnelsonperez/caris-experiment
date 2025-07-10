@@ -12,7 +12,7 @@
               class="search-input"
               placeholder="Search products by name or ID..."
             >
-            <span class="search-stats">{{ filteredProducts.length }} products</span>
+            <span class="search-stats">{{ filteredProducts.length }} products ({{ productsWithDefaultPricing }} with default pricing)</span>
           </div>
           
           <!-- Active Order Quick Add Panel -->
@@ -92,6 +92,12 @@ export default {
       activeOrder.value ? ordersStore.getOrderTotal(activeOrder.value.id) : 0
     )
     
+    const productsWithDefaultPricing = computed(() => {
+      return filteredProducts.value.filter(product => 
+        productsStore.hasDefaultPrice(product.productId)
+      ).length
+    })
+    
     const formatPrice = (price) => {
       return `€${price.toFixed(2)}`
     }
@@ -131,6 +137,7 @@ export default {
       activeOrder,
       activeOrderItemCount,
       activeOrderTotal,
+      productsWithDefaultPricing,
       formatPrice,
       openProductModal,
       closeProductModal,

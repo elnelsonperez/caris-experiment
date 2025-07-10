@@ -1,11 +1,24 @@
 import { defineStore } from 'pinia'
 import productsData from '@/data/products.json'
+import invoiceData from '@/data/invoice01.json'
+
+// Create default prices map from invoice data
+const createDefaultPrices = () => {
+  const defaultPrices = {}
+  invoiceData.forEach(item => {
+    if (item.productId && item.discountedPrice) {
+      defaultPrices[item.productId] = item.discountedPrice
+    }
+  })
+  return defaultPrices
+}
 
 export const useProductsStore = defineStore('products', {
   state: () => ({
     products: productsData,
     searchQuery: '',
-    productPrices: {} // { productId: defaultPrice }
+    productPrices: {}, // User-set prices
+    defaultPrices: createDefaultPrices() // Invoice-based default prices
   }),
   getters: {
     filteredProducts: (state) => {
@@ -20,7 +33,14 @@ export const useProductsStore = defineStore('products', {
       return state.products.find(product => product.productId === id)
     },
     getProductPrice: (state) => (productId) => {
-      return state.productPrices[productId] || 0
+      // Return user-set price if available, otherwise default price from invoice, otherwise 0
+      return state.productPrices[productId] || state.defaultPrices[productId] || 0
+    },
+    hasDefaultPrice: (state) => (productId) => {
+      return !!state.defaultPrices[productId]
+    },
+    getDefaultPrice: (state) => (productId) => {
+      return state.defaultPrices[productId] || 0
     }
   },
   actions: {
