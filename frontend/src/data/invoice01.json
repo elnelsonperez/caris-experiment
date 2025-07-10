@@ -287,8 +287,8 @@
   },
   {
     "invoiceCode": "SPA01",
-    "productId": null,
-    "productName": null,
+    "productId": "773",
+    "productName": "SPACE / SPA 01",
     "invoiceName": "SPACE CHAIR",
     "listPrice": 250,
     "discount": 50,
