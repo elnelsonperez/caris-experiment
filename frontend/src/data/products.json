@@ -839,5 +839,135 @@
       "qtyPerBox": 1,
       "rawText": "{\"width_cm\": 56,\"height_cm\": 77,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 58,\"weight_kg\": 7.15,\"box_width_cm\": 57, \"box_height_cm\": 79, \"box_depth_cm\": 59, \"qty_per_box\": 1}"
     }
+  },
+  {
+    "productId": "1048",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1048",
+    "productName": "LONDON",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5897--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5888--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5890--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5887--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5889--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5891--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5892--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5893--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5895--1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/LONDON/_MG_5896--1000x1000.jpg"
+    ],
+    "dimensionsImage": null,
+    "error": null
+  },
+  {
+    "productId": "481",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=481",
+    "productName": "EL\u0130PS / ELP 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/elp01-1-1000x1000.jpg"
+    ],
+    "dimensionsImage": null,
+    "error": null
+  },
+  {
+    "productId": "615",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=615",
+    "productName": "D\u0130ANA / DIA 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_5-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0151-1000x1000h.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0152-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0153-1000x1000h.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0149-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0154-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_4-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_10-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_9-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_12-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_11-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_8-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_7-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_6-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/diana-olcu-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 49,
+      "height": 84,
+      "floor_to_chair_height_cm": 47,
+      "depth": 56,
+      "weight": 7.2,
+      "boxWidth": 52,
+      "boxHeight": 100,
+      "boxDepth": 72,
+      "qtyPerBox": 2,
+      "rawText": "{\"width_cm\": 49,\"height_cm\": 84,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 56,\"weight_kg\": 7.2,\"box_width_cm\": 52, \"box_height_cm\": 100, \"box_depth_cm\": 72, \"qty_per_box\": 2}"
+    }
+  },
+  {
+    "productId": "1140",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1140",
+    "productName": "MATIZ / MTZ 02",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8298-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8286-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8297-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8283-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8291-1000x1000.jpg"
+    ],
+    "dimensionsImage": null,
+    "error": null
+  },
+  {
+    "productId": "630",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=630",
+    "productName": "EVEREST / EVR 02",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/EVR02_1-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/EVEREST%20OLCU_1%20SON-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 58,
+      "height": 87,
+      "floor_to_chair_height_cm": 47,
+      "depth": 60,
+      "weight": 12,
+      "boxWidth": 59,
+      "boxHeight": 89,
+      "boxDepth": 61,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 58,\"height_cm\": 87,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 60,\"weight_kg\": 12,\"box_width_cm\": 59, \"box_height_cm\": 89, \"box_depth_cm\": 61, \"qty_per_box\": 1}"
+    }
+  },
+  {
+    "productId": "819",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=819",
+    "productName": "NORTON / NRT 02",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/_MG_8780-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/Capture-One-Catalog0183-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/_MG_8779-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/Capture-One-Catalog0182-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/Capture-One-Catalog0186-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/Capture-One-Catalog0184-1000x1000w.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/_MG_8775-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/_MG_8776-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/_MG_8777-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/uruns/norton%20/nrt%2002/%C3%96l%C3%A7%C3%BC-500x375.png",
+    "error": null,
+    "dimensions": {
+      "width": 60,
+      "height": 82,
+      "floor_to_chair_height_cm": 49,
+      "depth": 56.5,
+      "weight": 8,
+      "boxWidth": 56,
+      "boxHeight": 84,
+      "boxDepth": 64,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 60,\"height_cm\": 82,\"floor_to_chair_height_cm\": 49,\"depth_cm\": 56.5,\"weight_kg\": 8,\"box_width_cm\": 56, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
+    }
   }
 ]
