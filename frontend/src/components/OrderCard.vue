@@ -150,6 +150,7 @@
             </div>
             <div v-else class="normal-actions">
               <button @click="startEdit(item)" class="mini-btn edit">Edit</button>
+              <button @click="duplicateItem(item)" class="mini-btn duplicate">Duplicate</button>
               <button @click="removeItem(item)" class="mini-btn delete">Remove</button>
             </div>
           </div>
@@ -426,6 +427,15 @@ export default {
     }
     
     
+    const duplicateItem = (item) => {
+      // addToOrder expects productId as second parameter, not itemId
+      ordersStore.addToOrder(props.order.id, item.productId, {
+        fabric: item.fabric,
+        price: item.price,
+        quantity: item.quantity
+      })
+    }
+    
     const removeItem = (item) => {
       if (confirm('Remove this item from the order?')) {
         ordersStore.removeFromOrder(props.order.id, item.itemId)
@@ -513,6 +523,7 @@ export default {
       getEditedSubtotal,
       openFabricPicker,
       onFabricSelected,
+      duplicateItem,
       removeItem,
       toggleContainerType,
       zoomedImageId,
@@ -841,6 +852,15 @@ export default {
 
 .mini-btn.cancel:hover {
   background: #7f8c8d;
+}
+
+.mini-btn.duplicate {
+  background: #3498db;
+  color: white;
+}
+
+.mini-btn.duplicate:hover {
+  background: #2980b9;
 }
 
 

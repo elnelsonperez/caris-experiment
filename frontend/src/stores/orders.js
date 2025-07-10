@@ -23,10 +23,12 @@ export const useOrdersStore = defineStore('orders', {
     getOrderItemsWithId: (state) => (orderId) => {
       const order = state.orders[orderId]
       if (!order) return []
-      return Object.entries(order.items).map(([itemId, item]) => ({
-        ...item,
-        itemId
-      }))
+      return Object.entries(order.items)
+        .map(([itemId, item]) => ({
+          ...item,
+          itemId
+        }))
+        .sort((a, b) => a.productId.localeCompare(b.productId))
     },
     getOrderTotal: (state) => (orderId) => {
       const order = state.orders[orderId]
