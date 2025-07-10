@@ -444,8 +444,9 @@
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=553",
     "productName": "BAZZ / BZZ 01",
     "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/BZZ01_1-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/BZZ01_2-1000x1000.jpg",
-      "https://www.caris.com.tr/image/cache/catalog/uruns/BZZ01_1-1000x1000.jpg"
+
     ],
     "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/bazz_olcu_SON-500x375.jpg",
     "error": null,
@@ -731,10 +732,11 @@
   {
     "productId": "1139",
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1139",
-    "productName": "MAT\u0130Z / MTZ 02",
+    "productName": "MAT\u0130Z / MTZ 01",
     "images": [
-      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/MTZ%2001/_MG_8318-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/MTZ%2001/_MG_8310-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/MTZ%2001/_MG_8318-1000x1000.jpg",
+
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/MTZ%2001/_MG_8312-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/MTZ%2001/_MG_8309-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/MTZ%2001/_MG_8311-1000x1000.jpg",
@@ -927,8 +929,9 @@
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=1140",
     "productName": "MATIZ / MTZ 02",
     "images": [
-      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8298-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8286-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8298-1000x1000.jpg",
+
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8297-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8283-1000x1000.jpg",
       "https://www.caris.com.tr/image/cache/catalog/uruns/MAT%C4%B0Z/_MG_8291-1000x1000.jpg"
