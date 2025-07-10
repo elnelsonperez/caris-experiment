@@ -815,5 +815,29 @@
       "qtyPerBox": 1,
       "rawText": "{\"width_cm\": 59,\"height_cm\": 78,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 58,\"weight_kg\": 9,\"box_width_cm\": null, \"box_height_cm\": null, \"box_depth_cm\": null, \"qty_per_box\": 1}"
     }
+  },
+  {
+    "productId": "773",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=773",
+    "productName": "SPACE / SPA 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SPA01_3-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SPA01_1-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/SPA01_2-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/SPACE%20OLCU-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 56,
+      "height": 77,
+      "floor_to_chair_height_cm": 46,
+      "depth": 58,
+      "weight": 7.15,
+      "boxWidth": 57,
+      "boxHeight": 79,
+      "boxDepth": 59,
+      "qtyPerBox": 1,
+      "rawText": "{\"width_cm\": 56,\"height_cm\": 77,\"floor_to_chair_height_cm\": 46,\"depth_cm\": 58,\"weight_kg\": 7.15,\"box_width_cm\": 57, \"box_height_cm\": 79, \"box_depth_cm\": 59, \"qty_per_box\": 1}"
+    }
   }
 ]
