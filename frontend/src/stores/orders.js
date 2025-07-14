@@ -203,13 +203,14 @@ export const useOrdersStore = defineStore('orders', {
     migrateOrdersFormat() {
       let needsMigration = false
       
-      // Check if any orders need migration (old format uses productId as key)
+      // Check if any orders need migration
       for (const [orderId, order] of Object.entries(this.orders)) {
         if (order.items) {
           for (const [itemKey, item] of Object.entries(order.items)) {
-            // Old format: itemKey equals productId
-            // New format: itemKey is composite (productId_fabric_timestamp)
-            if (itemKey === item.productId && !itemKey.includes('_')) {
+            // Check for old format: itemKey equals productId
+            // OR fabric is not an array (new requirement)
+            if ((itemKey === item.productId && !itemKey.includes('_')) || 
+                (item.fabric && !Array.isArray(item.fabric))) {
               needsMigration = true
               break
             }
@@ -221,41 +222,66 @@ export const useOrdersStore = defineStore('orders', {
       if (needsMigration) {
         console.log('Migrating orders to new format...')
         
-        for (const [orderId, order] of Object.entries(this.orders)) {
-          if (order.items) {
-            const newItems = {}
-            
-            for (const [itemKey, item] of Object.entries(order.items)) {
-              // Check if this is old format (itemKey equals productId)
-              if (itemKey === item.productId && !itemKey.includes('_')) {
-                // Generate new itemId for migrated data
-                const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
-                const fabricKey = fabricArray.join('_')
-                const newItemId = `${item.productId}_${fabricKey}_migrated_${Date.now()}`
-                newItems[newItemId] = {
-                  ...item,
-                  fabric: fabricArray,
-                  notes: item.notes || '' // Ensure notes field exists
-                }
-              } else {
-                // Already new format, ensure notes field exists and fabric is array
-                const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
-                newItems[itemKey] = {
-                  ...item,
-                  fabric: fabricArray,
-                  notes: item.notes || ''
-                }
-              }
-            }
-            
-            this.orders[orderId].items = newItems
-            this.orders[orderId].updatedAt = Date.now()
-          }
+        // Create backup of existing data before migration
+        const backupKey = `orders_backup_${Date.now()}`
+        const currentData = localStorage.getItem('orders')
+        if (currentData) {
+          localStorage.setItem(backupKey, currentData)
+          console.log(`Backup created at key: ${backupKey}`)
         }
         
-        // Save migrated data
-        this.saveToStorage()
-        console.log('Orders migration completed')
+        try {
+          for (const [orderId, order] of Object.entries(this.orders)) {
+            if (order.items) {
+              const newItems = {}
+              
+              for (const [itemKey, item] of Object.entries(order.items)) {
+                // Check if this is old format (itemKey equals productId)
+                if (itemKey === item.productId && !itemKey.includes('_')) {
+                  // Generate new itemId for migrated data
+                  const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
+                  const fabricKey = fabricArray.join('_')
+                  const newItemId = `${item.productId}_${fabricKey}_migrated_${Date.now()}`
+                  newItems[newItemId] = {
+                    ...item,
+                    fabric: fabricArray,
+                    notes: item.notes || '' // Ensure notes field exists
+                  }
+                } else if (item.fabric && !Array.isArray(item.fabric)) {
+                  // New format itemKey but fabric is still string - convert to array
+                  const fabricArray = [item.fabric]
+                  newItems[itemKey] = {
+                    ...item,
+                    fabric: fabricArray,
+                    notes: item.notes || ''
+                  }
+                } else {
+                  // Already fully migrated format, ensure notes field exists
+                  newItems[itemKey] = {
+                    ...item,
+                    fabric: item.fabric || [],
+                    notes: item.notes || ''
+                  }
+                }
+              }
+              
+              this.orders[orderId].items = newItems
+              this.orders[orderId].updatedAt = Date.now()
+            }
+          }
+          
+          // Save migrated data
+          this.saveToStorage()
+          console.log('Orders migration completed')
+        } catch (error) {
+          console.error('Migration failed, attempting to restore from backup:', error)
+          // Restore from backup if migration fails
+          if (currentData) {
+            localStorage.setItem('orders', currentData)
+            console.log('Restored from backup due to migration failure')
+          }
+          throw error
+        }
       }
     }
   }
