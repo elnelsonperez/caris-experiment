@@ -3,10 +3,10 @@
     <form @submit.prevent="addToOrder" class="condensed-form">
       <!-- Fabric Selection -->
       <div class="form-group">
-        <label class="form-label">Fabric</label>
+        <label class="form-label">Fabric(s)</label>
         <div class="fabric-input-group">
           <input 
-            v-model="selectedFabric" 
+            :value="fabricDisplayText" 
             type="text" 
             class="form-control"
             placeholder="Click to select..."
@@ -53,8 +53,8 @@
       <button 
         type="submit" 
         class="btn-add-order" 
-        :disabled="!selectedFabric"
-        :class="{ disabled: !selectedFabric }"
+        :disabled="selectedFabrics.length === 0"
+        :class="{ disabled: selectedFabrics.length === 0 }"
       >
         Add to Order
       </button>
@@ -63,7 +63,10 @@
     <!-- Fabric Picker Modal -->
     <FabricPicker 
       v-if="showFabricPicker"
+      :multiple="true"
+      :initial-selection="selectedFabrics"
       @fabric-selected="onFabricSelected"
+      @fabrics-selected="onFabricsSelected"
       @close="showFabricPicker = false"
     />
   </div>
@@ -92,7 +95,7 @@ export default {
     const productsStore = useProductsStore()
     const toast = useToast()
     
-    const selectedFabric = ref('')
+    const selectedFabrics = ref([])
     const price = ref('')
     const quantity = ref(1)
     const showFabricPicker = ref(false)
@@ -108,27 +111,41 @@ export default {
     }, { immediate: true })
     
     const onFabricSelected = (fabric) => {
-      selectedFabric.value = fabric.code
+      selectedFabrics.value = [fabric]
       showFabricPicker.value = false
     }
     
+    const onFabricsSelected = (fabrics) => {
+      selectedFabrics.value = fabrics
+      showFabricPicker.value = false
+    }
+    
+    const fabricDisplayText = computed(() => {
+      if (selectedFabrics.value.length === 0) return ''
+      if (selectedFabrics.value.length === 1) return selectedFabrics.value[0].code
+      return `${selectedFabrics.value.length} fabrics selected`
+    })
+    
     const addToOrder = () => {
-      if (!activeOrder.value || !selectedFabric.value) return
+      if (!activeOrder.value || selectedFabrics.value.length === 0) return
       
       ordersStore.addToOrder(activeOrder.value.id, props.product.productId, {
-        fabric: selectedFabric.value,
+        fabric: selectedFabrics.value.map(f => f.code),
         price: parseFloat(price.value),
         quantity: parseInt(quantity.value)
       })
       
       // Show success toast
-      toast.success(`Added ${props.product.productName} to ${activeOrder.value.name}`, {
+      const fabricText = selectedFabrics.value.length === 1 
+        ? selectedFabrics.value[0].code
+        : `${selectedFabrics.value.length} fabrics`
+      toast.success(`Added ${props.product.productName} (${fabricText}) to ${activeOrder.value.name}`, {
         timeout: 2000,
         closeOnClick: true
       })
       
       // Reset form
-      selectedFabric.value = ''
+      selectedFabrics.value = []
       quantity.value = 1
       
       // Update default price if changed
@@ -139,12 +156,14 @@ export default {
     }
     
     return {
-      selectedFabric,
+      selectedFabrics,
+      fabricDisplayText,
       price,
       quantity,
       showFabricPicker,
       activeOrder,
       onFabricSelected,
+      onFabricsSelected,
       addToOrder
     }
   }

@@ -2,8 +2,13 @@
   <div class="modal" @click.self="$emit('close')">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Select Fabric</h3>
-        <button @click="$emit('close')" class="close-btn">&times;</button>
+        <h3>{{ multiple ? 'Select Fabrics' : 'Select Fabric' }}</h3>
+        <div class="header-actions">
+          <span v-if="multiple && selectedFabrics.length > 0" class="selected-count">
+            {{ selectedFabrics.length }} selected
+          </span>
+          <button @click="$emit('close')" class="close-btn">&times;</button>
+        </div>
       </div>
       <div class="modal-body">
         <!-- Search -->
@@ -33,6 +38,7 @@
                 v-for="fabric in fabrics" 
                 :key="fabric.code"
                 class="fabric-item"
+                :class="{ 'selected': isSelected(fabric) }"
                 @click="selectFabric(fabric)"
               >
                 <div class="fabric-image-container">
@@ -44,6 +50,7 @@
                   >
                   <div class="fabric-overlay">
                     <div class="fabric-code">{{ fabric.code }}</div>
+                    <div v-if="isSelected(fabric)" class="selected-indicator">✓</div>
                   </div>
                 </div>
               </div>
@@ -55,20 +62,41 @@
         <div v-if="Object.keys(groupedFabrics).length === 0" class="text-center p-4">
           <p class="text-muted">No fabrics found matching your search.</p>
         </div>
+        
+        <!-- Multiple Selection Actions -->
+        <div v-if="multiple" class="modal-actions">
+          <button @click="clearSelection" class="btn btn-secondary" :disabled="selectedFabrics.length === 0">
+            Clear Selection
+          </button>
+          <button @click="confirmSelection" class="btn btn-primary" :disabled="selectedFabrics.length === 0">
+            Confirm Selection ({{ selectedFabrics.length }})
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useFabricsStore } from '@/stores/fabrics'
 
 export default {
   name: 'FabricPicker',
-  emits: ['fabric-selected', 'close'],
+  props: {
+    multiple: {
+      type: Boolean,
+      default: false
+    },
+    initialSelection: {
+      type: Array,
+      default: () => []
+    }
+  },
+  emits: ['fabric-selected', 'fabrics-selected', 'close'],
   setup(props, { emit }) {
     const fabricsStore = useFabricsStore()
+    const selectedFabrics = ref([...props.initialSelection])
     
     const searchQuery = computed({
       get: () => fabricsStore.searchQuery,
@@ -78,8 +106,29 @@ export default {
     const filteredFabrics = computed(() => fabricsStore.filteredFabrics)
     const groupedFabrics = computed(() => fabricsStore.groupedFabrics)
     
+    const isSelected = (fabric) => {
+      return selectedFabrics.value.some(f => f.code === fabric.code)
+    }
+    
     const selectFabric = (fabric) => {
-      emit('fabric-selected', fabric)
+      if (props.multiple) {
+        const index = selectedFabrics.value.findIndex(f => f.code === fabric.code)
+        if (index > -1) {
+          selectedFabrics.value.splice(index, 1)
+        } else {
+          selectedFabrics.value.push(fabric)
+        }
+      } else {
+        emit('fabric-selected', fabric)
+      }
+    }
+    
+    const clearSelection = () => {
+      selectedFabrics.value = []
+    }
+    
+    const confirmSelection = () => {
+      emit('fabrics-selected', selectedFabrics.value)
     }
     
     const handleImageError = (event) => {
@@ -90,7 +139,11 @@ export default {
       searchQuery,
       filteredFabrics,
       groupedFabrics,
+      selectedFabrics,
+      isSelected,
       selectFabric,
+      clearSelection,
+      confirmSelection,
       handleImageError
     }
   }
@@ -168,6 +221,12 @@ export default {
   border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.fabric-item.selected {
+  border: 3px solid #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .fabric-item:hover {
@@ -221,6 +280,24 @@ export default {
   line-height: 1;
 }
 
+.selected-indicator {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  background: #3498db;
+  color: white;
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 /* Custom Scrollbar */
 .fabric-groups-container::-webkit-scrollbar {
   width: 8px;
@@ -259,12 +336,30 @@ export default {
 .modal-header {
   padding: 1.5rem;
   border-bottom: 2px solid #f1f3f4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .modal-header h3 {
   color: #2c3e50;
   font-weight: 600;
   margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.selected-count {
+  font-size: 0.875rem;
+  color: #3498db;
+  font-weight: 500;
+  background: rgba(52, 152, 219, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
 }
 
 .close-btn {
@@ -291,5 +386,53 @@ export default {
 .text-muted {
   color: #6c757d;
   font-style: italic;
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #5a6268;
 }
 </style>

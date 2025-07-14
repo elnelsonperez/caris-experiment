@@ -138,12 +138,16 @@ export const useOrdersStore = defineStore('orders', {
     addToOrder(orderId, productId, { fabric, price, quantity, notes = '' }) {
       if (!this.orders[orderId]) return
       
-      // Generate unique item ID based on product + fabric + timestamp
-      const itemId = `${productId}_${fabric}_${Date.now()}`
+      // Ensure fabric is always an array
+      const fabricArray = Array.isArray(fabric) ? fabric : [fabric]
+      
+      // Generate unique item ID based on product + fabrics + timestamp
+      const fabricKey = fabricArray.join('_')
+      const itemId = `${productId}_${fabricKey}_${Date.now()}`
       
       this.orders[orderId].items[itemId] = { 
         productId, 
-        fabric, 
+        fabric: fabricArray, 
         price: Number(price), 
         quantity: Number(quantity),
         notes: notes || ''
@@ -225,15 +229,20 @@ export const useOrdersStore = defineStore('orders', {
               // Check if this is old format (itemKey equals productId)
               if (itemKey === item.productId && !itemKey.includes('_')) {
                 // Generate new itemId for migrated data
-                const newItemId = `${item.productId}_${item.fabric}_migrated_${Date.now()}`
+                const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
+                const fabricKey = fabricArray.join('_')
+                const newItemId = `${item.productId}_${fabricKey}_migrated_${Date.now()}`
                 newItems[newItemId] = {
                   ...item,
+                  fabric: fabricArray,
                   notes: item.notes || '' // Ensure notes field exists
                 }
               } else {
-                // Already new format, ensure notes field exists
+                // Already new format, ensure notes field exists and fabric is array
+                const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
                 newItems[itemKey] = {
                   ...item,
+                  fabric: fabricArray,
                   notes: item.notes || ''
                 }
               }

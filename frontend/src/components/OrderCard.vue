@@ -91,24 +91,40 @@
             </div>
           </div>
           <div class="col-fabric">
-            <div v-if="editingItem?.itemId !== item.itemId" class="fabric-preview" @click="viewFabric(item.fabric)">
-              <img 
-                :src="getFabricImage(item.fabric)" 
-                :alt="item.fabric"
-                class="fabric-thumbnail"
-                @error="handleFabricImageError"
+            <div v-if="editingItem?.itemId !== item.itemId" class="fabric-preview-list">
+              <div 
+                v-for="fabricCode in item.fabric" 
+                :key="fabricCode"
+                class="fabric-preview" 
+                @click="viewFabric(fabricCode)"
               >
-              <div class="fabric-code">{{ item.fabric }}</div>
-            </div>
-            <div v-else class="fabric-edit">
-              <button @click="openFabricPicker(item)" class="btn-fabric-change">
                 <img 
-                  :src="getFabricImage(item.fabric)" 
-                  :alt="item.fabric"
+                  :src="getFabricImage(fabricCode)" 
+                  :alt="fabricCode"
                   class="fabric-thumbnail"
                   @error="handleFabricImageError"
                 >
-                <span class="fabric-code">{{ item.fabric }}</span>
+                <div class="fabric-code">{{ fabricCode }}</div>
+              </div>
+            </div>
+            <div v-else class="fabric-edit">
+              <button @click="openFabricPicker(item)" class="btn-fabric-change">
+                <div class="fabric-edit-display">
+                  <div 
+                    v-for="fabricCode in item.fabric" 
+                    :key="fabricCode"
+                    class="fabric-edit-item"
+                  >
+                    <img 
+                      :src="getFabricImage(fabricCode)" 
+                      :alt="fabricCode"
+                      class="fabric-thumbnail"
+                      @error="handleFabricImageError"
+                    >
+                    <span class="fabric-code">{{ fabricCode }}</span>
+                  </div>
+                </div>
+                <span class="change-text">Change</span>
               </button>
             </div>
           </div>
@@ -257,7 +273,10 @@
     <!-- Fabric Picker for Editing -->
     <FabricPicker 
       v-if="fabricPickerForItem"
+      :multiple="true"
+      :initial-selection="getCurrentFabricSelection()"
       @fabric-selected="onFabricSelected"
+      @fabrics-selected="onFabricsSelected"
       @close="fabricPickerForItem = null"
     />
     
@@ -438,10 +457,24 @@ export default {
     const onFabricSelected = (fabric) => {
       if (fabricPickerForItem.value) {
         ordersStore.updateOrderItem(props.order.id, fabricPickerForItem.value.itemId, {
-          fabric: fabric.code
+          fabric: [fabric.code]
         })
         fabricPickerForItem.value = null
       }
+    }
+    
+    const onFabricsSelected = (fabrics) => {
+      if (fabricPickerForItem.value) {
+        ordersStore.updateOrderItem(props.order.id, fabricPickerForItem.value.itemId, {
+          fabric: fabrics.map(f => f.code)
+        })
+        fabricPickerForItem.value = null
+      }
+    }
+    
+    const getCurrentFabricSelection = () => {
+      if (!fabricPickerForItem.value) return []
+      return fabricPickerForItem.value.fabric.map(fabricCode => fabricsStore.getFabricByCode(fabricCode)).filter(Boolean)
     }
     
     
@@ -542,6 +575,8 @@ export default {
       getEditedSubtotal,
       openFabricPicker,
       onFabricSelected,
+      onFabricsSelected,
+      getCurrentFabricSelection,
       duplicateItem,
       removeItem,
       toggleContainerType,
@@ -789,6 +824,13 @@ export default {
   color: #6c757d;
 }
 
+.fabric-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  max-width: 200px;
+}
+
 .fabric-preview {
   display: flex;
   align-items: center;
@@ -797,6 +839,7 @@ export default {
   transition: all 0.2s ease;
   padding: 0.25rem;
   border-radius: 0.25rem;
+  min-width: 0;
 }
 
 .fabric-preview:hover {
@@ -817,6 +860,45 @@ export default {
   font-weight: 500;
   color: #3498db;
   font-size: 0.875rem;
+}
+
+.fabric-edit-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.fabric-edit-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  background: #f8f9fa;
+  border-radius: 0.25rem;
+  border: 1px solid #e9ecef;
+}
+
+.btn-fabric-change {
+  background: none;
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.btn-fabric-change:hover {
+  background: #f8f9fa;
+  border-color: #3498db;
+}
+
+.change-text {
+  font-size: 0.75rem;
+  color: #3498db;
+  font-weight: 500;
 }
 
 .price-value,
