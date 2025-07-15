@@ -48,7 +48,7 @@
               <tr v-for="item in orderItems" :key="item.itemId">
                 <td>{{ item.productId }}</td>
                 <td>{{ getProductName(item.productId) }}</td>
-                <td>{{ item.fabric }}</td>
+                <td>{{ Array.isArray(item.fabric) ? item.fabric.join(', ') : item.fabric }}</td>
                 <td v-if="includePrices">{{ formatPrice(item.price) }}</td>
                 <td>{{ item.quantity }}</td>
                 <td v-if="includePrices">{{ formatPrice(item.price * item.quantity) }}</td>
@@ -149,7 +149,7 @@ export default {
         tsvContent += '\n'
         
         orderItems.value.forEach(item => {
-          let row = `${item.productId}\t${getProductName(item.productId)}\t${item.fabric}`
+          let row = `${item.productId}\t${getProductName(item.productId)}\t${Array.isArray(item.fabric) ? item.fabric.join(', ') : item.fabric}`
           if (includePrices.value) row += `\t${formatPrice(item.price)}`
           row += `\t${item.quantity}`
           if (includePrices.value) row += `\t${formatPrice(item.price * item.quantity)}`
@@ -201,7 +201,14 @@ export default {
       const orderItemsHTML = orderItems.value.map(item => {
         const productName = getProductName(item.productId)
         const productImage = productsStore.getProductById(item.productId)?.images[0] || ''
-        const fabricImage = fabricsStore.getFabricByCode(item.fabric)?.thumbnail_url || ''
+        
+        // Handle fabric arrays
+        const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
+        const fabricImagesHTML = fabricArray.map(fabricCode => {
+          const fabricImage = fabricsStore.getFabricByCode(fabricCode)?.thumbnail_url || ''
+          return `<img src="${fabricImage}" alt="${fabricCode}" class="fabric-img" onerror="this.style.display='none'">`
+        }).join('')
+        const fabricText = fabricArray.join(', ')
         
         let rowHTML = `
           <tr>
@@ -212,8 +219,8 @@ export default {
             <td class="product-name">${productName}</td>
             <td>
               <div class="fabric-cell">
-                <img src="${fabricImage}" alt="${item.fabric}" class="fabric-img" onerror="this.style.display='none'">
-                <span>${item.fabric}</span>
+                ${fabricImagesHTML}
+                <span>${fabricText}</span>
               </div>
             </td>`
         
@@ -301,6 +308,7 @@ export default {
               display: flex;
               align-items: center;
               gap: 8px;
+              flex-wrap: wrap;
             }
             .fabric-img {
               width: 60px;
@@ -308,6 +316,7 @@ export default {
               object-fit: cover;
               border-radius: 3px;
               flex-shrink: 0;
+              margin-right: 4px;
             }
             .product-name {
               font-weight: 500;
@@ -353,7 +362,7 @@ export default {
               .order-table { font-size: 10px; }
               .header h1 { font-size: 20px; }
               .product-img { width: 60px; height: 60px; }
-              .fabric-img { width: 45px; height: 45px; }
+              .fabric-img { width: 45px; height: 45px; margin-right: 2px; }
             }
           </style>
         </head>
