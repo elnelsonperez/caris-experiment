@@ -990,5 +990,16 @@
       "qtyPerBox": 1,
       "rawText": "{\"width_cm\": 60,\"height_cm\": 82,\"floor_to_chair_height_cm\": 49,\"depth_cm\": 56.5,\"weight_kg\": 8,\"box_width_cm\": 56, \"box_height_cm\": 84, \"box_depth_cm\": 64, \"qty_per_box\": 1}"
     }
+  },
+  {
+    "productId": "979",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=979",
+    "productName": "ARC / ARC 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ARC/_MG_4465-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/ARC/_MG_4463-1000x1000.jpg"
+    ],
+    "dimensionsImage": null,
+    "error": null
   }
 ]
