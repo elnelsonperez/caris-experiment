@@ -453,5 +453,18 @@
     "subtotal": 70,
     "quantity": 1,
     "notes": ""
+  },
+  {
+    "invoiceCode": "DIA01",
+    "productId": "615",
+    "productName": "DİANA / DIA 01",
+    "invoiceName": "DİANA",
+    "listPrice": 172,
+    "discount": 50,
+    "discountedPrice": 86,
+    "total": 86.00,
+    "subtotal": 86,
+    "quantity": 1,
+    "notes": ""
   }
 ]

@@ -1,5 +1,40 @@
 [
   {
+    "productId": "615",
+    "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=615",
+    "productName": "D\u0130ANA / DIA 01",
+    "images": [
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_5-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0151-1000x1000h.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0152-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0153-1000x1000h.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0149-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/diana/d%C4%B1a%2001/Capture-One-Catalog0154-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_4-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_10-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_9-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_12-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_11-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_8-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_7-1000x1000.jpg",
+      "https://www.caris.com.tr/image/cache/catalog/uruns/DIA01_6-1000x1000.jpg"
+    ],
+    "dimensionsImage": "https://www.caris.com.tr/image/cache/catalog/olculer/diana-olcu-500x375.jpg",
+    "error": null,
+    "dimensions": {
+      "width": 49,
+      "height": 84,
+      "floor_to_chair_height_cm": 47,
+      "depth": 56,
+      "weight": 7.2,
+      "boxWidth": 52,
+      "boxHeight": 100,
+      "boxDepth": 72,
+      "qtyPerBox": 2,
+      "rawText": "{\"width_cm\": 49,\"height_cm\": 84,\"floor_to_chair_height_cm\": 47,\"depth_cm\": 56,\"weight_kg\": 7.2,\"box_width_cm\": 52, \"box_height_cm\": 100, \"box_depth_cm\": 72, \"qty_per_box\": 2}"
+    }
+  },
+  {
     "productId": "818",
     "url": "https://www.caris.com.tr/index.php?route=product/product&path=38&product_id=818",
     "productName": "NORTON / NRT 01",
