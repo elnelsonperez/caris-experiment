@@ -48,7 +48,7 @@
               <tr v-for="item in orderItems" :key="item.itemId">
                 <td>{{ item.productId }}</td>
                 <td>{{ getProductName(item.productId) }}</td>
-                <td>{{ Array.isArray(item.fabric) ? item.fabric.join(', ') : item.fabric }}</td>
+                <td>{{ Array.isArray(item.fabric) && item.fabric.length > 0 ? item.fabric.join(', ') : item.fabric || '' }}</td>
                 <td v-if="includePrices">{{ formatPrice(item.price) }}</td>
                 <td>{{ item.quantity }}</td>
                 <td v-if="includePrices">{{ formatPrice(item.price * item.quantity) }}</td>
@@ -203,7 +203,7 @@ export default {
         const productImage = productsStore.getProductById(item.productId)?.images[0] || ''
         
         // Handle fabric arrays
-        const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
+        const fabricArray = Array.isArray(item.fabric) ? item.fabric.filter(f => f) : (item.fabric ? [item.fabric] : [])
         const fabricImagesHTML = fabricArray.map(fabricCode => {
           const fabricImage = fabricsStore.getFabricByCode(fabricCode)?.thumbnail_url || ''
           return `<img src="${fabricImage}" alt="${fabricCode}" class="fabric-img" onerror="this.style.display='none'">`

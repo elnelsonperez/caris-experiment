@@ -3,13 +3,13 @@
     <form @submit.prevent="addToOrder" class="condensed-form">
       <!-- Fabric Selection -->
       <div class="form-group">
-        <label class="form-label">Fabric(s)</label>
+        <label class="form-label">Fabric(s) <span class="optional-label">(Optional)</span></label>
         <div class="fabric-input-group">
           <input 
             :value="fabricDisplayText" 
             type="text" 
             class="form-control"
-            placeholder="Click to select..."
+            placeholder="Click to select or leave empty..."
             readonly
             @click="showFabricPicker = true"
           >
@@ -19,6 +19,15 @@
             class="btn-select"
           >
             Browse
+          </button>
+          <button 
+            v-if="selectedFabrics.length > 0"
+            type="button" 
+            @click="clearFabrics" 
+            class="btn-clear"
+            title="Clear fabric selection"
+          >
+            Clear
           </button>
         </div>
       </div>
@@ -52,9 +61,7 @@
       
       <button 
         type="submit" 
-        class="btn-add-order" 
-        :disabled="selectedFabrics.length === 0"
-        :class="{ disabled: selectedFabrics.length === 0 }"
+        class="btn-add-order"
       >
         Add to Order
       </button>
@@ -126,8 +133,12 @@ export default {
       return `${selectedFabrics.value.length} fabrics selected`
     })
     
+    const clearFabrics = () => {
+      selectedFabrics.value = []
+    }
+    
     const addToOrder = () => {
-      if (!activeOrder.value || selectedFabrics.value.length === 0) return
+      if (!activeOrder.value) return
       
       ordersStore.addToOrder(activeOrder.value.id, props.product.productId, {
         fabric: selectedFabrics.value.map(f => f.code),
@@ -136,9 +147,11 @@ export default {
       })
       
       // Show success toast
-      const fabricText = selectedFabrics.value.length === 1 
-        ? selectedFabrics.value[0].code
-        : `${selectedFabrics.value.length} fabrics`
+      const fabricText = selectedFabrics.value.length === 0 
+        ? 'No fabric'
+        : selectedFabrics.value.length === 1 
+          ? selectedFabrics.value[0].code
+          : `${selectedFabrics.value.length} fabrics`
       toast.success(`Added ${props.product.productName} (${fabricText}) to ${activeOrder.value.name}`, {
         timeout: 2000,
         closeOnClick: true
@@ -164,6 +177,7 @@ export default {
       activeOrder,
       onFabricSelected,
       onFabricsSelected,
+      clearFabrics,
       addToOrder
     }
   }
@@ -263,5 +277,27 @@ export default {
 .btn-add-order.disabled {
   background-color: #95a5a6;
   cursor: not-allowed;
+}
+
+.btn-clear {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.btn-clear:hover {
+  background-color: #c0392b;
+}
+
+.optional-label {
+  font-weight: 400;
+  color: #777;
+  font-size: 0.75rem;
 }
 </style>

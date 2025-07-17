@@ -93,7 +93,7 @@
           <div class="col-fabric">
             <div v-if="editingItem?.itemId !== item.itemId" class="fabric-preview-list">
               <div 
-                v-for="fabricCode in item.fabric" 
+                v-for="fabricCode in item.fabric.filter(f => f)" 
                 :key="fabricCode"
                 class="fabric-preview" 
                 @click="viewFabric(fabricCode)"
@@ -106,12 +106,15 @@
                 >
                 <div class="fabric-code">{{ fabricCode }}</div>
               </div>
+              <div v-if="!item.fabric || item.fabric.length === 0 || item.fabric.every(f => !f)" class="no-fabric-display">
+                -
+              </div>
             </div>
             <div v-else class="fabric-edit">
               <button @click="openFabricPicker(item)" class="btn-fabric-change">
                 <div class="fabric-edit-display">
                   <div 
-                    v-for="fabricCode in item.fabric" 
+                    v-for="fabricCode in item.fabric.filter(f => f)" 
                     :key="fabricCode"
                     class="fabric-edit-item"
                   >
@@ -123,8 +126,11 @@
                     >
                     <span class="fabric-code">{{ fabricCode }}</span>
                   </div>
+                  <div v-if="!item.fabric || item.fabric.length === 0 || item.fabric.every(f => !f)" class="no-fabric-edit">
+                    No fabric selected
+                  </div>
                 </div>
-                <span class="change-text">Change</span>
+                <span class="change-text">{{ (!item.fabric || item.fabric.length === 0 || item.fabric.every(f => !f)) ? 'Select' : 'Change' }}</span>
               </button>
             </div>
           </div>
@@ -466,7 +472,7 @@ export default {
     const onFabricsSelected = (fabrics) => {
       if (fabricPickerForItem.value) {
         ordersStore.updateOrderItem(props.order.id, fabricPickerForItem.value.itemId, {
-          fabric: fabrics.map(f => f.code)
+          fabric: fabrics.map(f => f.code).filter(code => code)
         })
         fabricPickerForItem.value = null
       }
@@ -474,7 +480,7 @@ export default {
     
     const getCurrentFabricSelection = () => {
       if (!fabricPickerForItem.value) return []
-      return fabricPickerForItem.value.fabric.map(fabricCode => fabricsStore.getFabricByCode(fabricCode)).filter(Boolean)
+      return fabricPickerForItem.value.fabric.filter(code => code).map(fabricCode => fabricsStore.getFabricByCode(fabricCode)).filter(Boolean)
     }
     
     
@@ -899,6 +905,19 @@ export default {
   font-size: 0.75rem;
   color: #3498db;
   font-weight: 500;
+}
+
+.no-fabric-display {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.no-fabric-edit {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.8rem;
+  padding: 0.25rem;
 }
 
 .price-value,

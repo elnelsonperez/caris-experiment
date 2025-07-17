@@ -65,11 +65,11 @@
         
         <!-- Multiple Selection Actions -->
         <div v-if="multiple" class="modal-actions">
-          <button @click="clearSelection" class="btn btn-secondary" :disabled="selectedFabrics.length === 0">
+          <button @click="clearSelection" class="btn btn-secondary">
             Clear Selection
           </button>
-          <button @click="confirmSelection" class="btn btn-primary" :disabled="selectedFabrics.length === 0">
-            Confirm Selection ({{ selectedFabrics.length }})
+          <button @click="confirmSelection" class="btn btn-primary">
+            Save Selection ({{ selectedFabrics.length }})
           </button>
         </div>
       </div>
