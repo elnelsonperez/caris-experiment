@@ -43,6 +43,48 @@
         </button>
       </div>
     </div>
+
+    <!-- Landed Cost Controls -->
+    <div class="landed-cost-controls">
+      <div class="control-group">
+        <label class="control-label">Overhead Costs ({{ order.currencyPreference || 'EUR' }})</label>
+        <input 
+          type="number" 
+          step="0.01" 
+          min="0"
+          :value="getDisplayOverheadCosts()"
+          @input="updateOverheadCosts"
+          class="control-input"
+          placeholder="0.00"
+        >
+      </div>
+      
+      <div class="control-group">
+        <label class="control-label">Retail Margin (%)</label>
+        <input 
+          type="number" 
+          step="0.1" 
+          min="0"
+          :value="order.retailMargin || 0"
+          @input="updateRetailMargin"
+          class="control-input"
+          placeholder="0.0"
+        >
+      </div>
+      
+      <div class="control-group">
+        <label class="control-label">Currency</label>
+        <select 
+          :value="order.currencyPreference || 'EUR'"
+          @change="updateCurrencyPreference"
+          class="control-select"
+        >
+          <option value="EUR">EUR (€)</option>
+          <option value="DOP">DOP ($)</option>
+        </select>
+      </div>
+      
+    </div>
     
     <!-- Order Items Table -->
     <div v-if="orderItems.length > 0" class="order-items">
@@ -51,7 +93,10 @@
           <div class="col-thumbnail">Image</div>
           <div class="col-product">Product</div>
           <div class="col-fabric">Fabric</div>
-          <div class="col-price">Price</div>
+          <div class="col-price">Base Price</div>
+          <div class="col-overhead">Overhead</div>
+          <div class="col-landed">Landed Cost</div>
+          <div class="col-retail">Retail Price</div>
           <div class="col-quantity">Qty</div>
           <div class="col-subtotal">Subtotal</div>
           <div class="col-volume">Volume</div>
@@ -145,6 +190,15 @@
               @change="updateEditingItem"
             >
             <span v-else class="price-value">{{ formatPrice(item.price) }}</span>
+          </div>
+          <div class="col-overhead">
+            <span class="overhead-value">{{ formatPrice(getItemOverheadCostPerUnit(item)) }}</span>
+          </div>
+          <div class="col-landed">
+            <span class="landed-value">{{ formatPrice(getItemLandedCost(item)) }}</span>
+          </div>
+          <div class="col-retail">
+            <span class="retail-value">{{ formatPrice(getItemRetailPrice(item)) }}</span>
           </div>
           <div class="col-quantity">
             <input 
@@ -300,6 +354,7 @@ import { ref, computed } from 'vue'
 import { useOrdersStore } from '@/stores/orders'
 import { useProductsStore } from '@/stores/products'
 import { useFabricsStore } from '@/stores/fabrics'
+import { formatPrice, convertCurrency } from '@/utils/currency'
 import FabricModal from '@/components/FabricModal.vue'
 import FabricPicker from '@/components/FabricPicker.vue'
 import OrderExportModal from '@/components/OrderExportModal.vue'
@@ -342,8 +397,10 @@ export default {
     const currentContainerVolume = computed(() => ordersStore.currentContainerVolume)
     const currentContainerWeight = computed(() => ordersStore.currentContainerWeight)
     
-    const formatPrice = (price) => {
-      return `€${price.toFixed(2)}`
+    const formatPriceWithCurrency = (price) => {
+      const currency = props.order.currencyPreference || 'EUR'
+      const convertedPrice = convertCurrency(price, 'EUR', currency)
+      return formatPrice(convertedPrice, currency)
     }
     
     const formatVolume = (volume) => {
@@ -536,6 +593,56 @@ export default {
       window.open(`/products/${productId}`, '_blank')
     }
     
+    const updateOverheadCosts = (event) => {
+      const displayValue = parseFloat(event.target.value) || 0
+      const currency = props.order.currencyPreference || 'EUR'
+      
+      // Convert input value to EUR for storage
+      const eurValue = convertCurrency(displayValue, currency, 'EUR')
+      ordersStore.updateOrderDetails(props.order.id, { overheadCosts: eurValue })
+    }
+    
+    const getDisplayOverheadCosts = () => {
+      const eurValue = props.order.overheadCosts || 0
+      const currency = props.order.currencyPreference || 'EUR'
+      return convertCurrency(eurValue, 'EUR', currency)
+    }
+    
+    const updateRetailMargin = (event) => {
+      const value = parseFloat(event.target.value) || 0
+      ordersStore.updateOrderDetails(props.order.id, { retailMargin: value })
+    }
+    
+    const updateCurrencyPreference = (event) => {
+      const newCurrency = event.target.value
+      
+      // Only update currency preference, keep overhead costs in EUR internally
+      ordersStore.updateOrderDetails(props.order.id, { 
+        currencyPreference: newCurrency
+      })
+    }
+    
+    const refreshRetailPrices = () => {
+      // Just trigger a refresh - the retail prices are calculated dynamically
+      ordersStore.refreshRetailPrices(props.order.id)
+    }
+    
+    const getItemOverheadCost = (item) => {
+      return ordersStore.getItemOverheadCost(props.order.id, item)
+    }
+    
+    const getItemOverheadCostPerUnit = (item) => {
+      return ordersStore.getItemOverheadCost(props.order.id, item) / item.quantity
+    }
+    
+    const getItemLandedCost = (item) => {
+      return ordersStore.getItemLandedCost(props.order.id, item)
+    }
+    
+    const getItemRetailPrice = (item) => {
+      return ordersStore.getItemRetailPrice(props.order.id, item)
+    }
+    
     
     return {
       editingItem,
@@ -556,7 +663,7 @@ export default {
       orderWeight,
       volumePercent,
       weightPercent,
-      formatPrice,
+      formatPrice: formatPriceWithCurrency,
       formatVolume,
       formatWeight,
       formatPercent,
@@ -589,7 +696,16 @@ export default {
       zoomedImageId,
       zoomOverlayStyle,
       showImageZoom,
-      hideImageZoom
+      hideImageZoom,
+      updateOverheadCosts,
+      updateRetailMargin,
+      updateCurrencyPreference,
+      refreshRetailPrices,
+      getItemOverheadCost,
+      getItemOverheadCostPerUnit,
+      getItemLandedCost,
+      getItemRetailPrice,
+      getDisplayOverheadCosts
     }
   }
 }
@@ -737,7 +853,7 @@ export default {
 
 .table-header {
   display: grid;
-  grid-template-columns: 60px 2fr 1.2fr 0.7fr 0.5fr 0.7fr 0.7fr 0.7fr 1.5fr 1fr;
+  grid-template-columns: 60px 2fr 1.2fr 0.7fr 0.5fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr 1.5fr 1fr;
   gap: 1rem;
   padding: 1rem 1.5rem;
   background: #f8f9fa;
@@ -751,7 +867,7 @@ export default {
 
 .table-row {
   display: grid;
-  grid-template-columns: 60px 2fr 1.2fr 0.7fr 0.5fr 0.7fr 0.7fr 0.7fr 1.5fr 1fr;
+  grid-template-columns: 60px 2fr 1.2fr 0.7fr 0.5fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr 1.5fr 1fr;
   gap: 1rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #f1f3f4;
@@ -1196,6 +1312,66 @@ export default {
   text-align: right;
 }
 
+
+/* Landed Cost Controls */
+.landed-cost-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  align-items: end;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-input,
+.control-select {
+  padding: 0.5rem;
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.control-input:focus,
+.control-select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.control-actions {
+  display: flex;
+  align-items: flex-end;
+}
+
+.overhead-value,
+.landed-value {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #27ae60;
+}
+
+.retail-value {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #3498db;
+}
 
 /* Empty State */
 .empty-items {

@@ -112,6 +112,32 @@ export const useOrdersStore = defineStore('orders', {
         return product.dimensions.weight * (parseInt(item.quantity) || 0)
       }
       return 0
+    },
+    getItemOverheadCost: (state) => (orderId, item) => {
+      const order = state.orders[orderId]
+      if (!order || !order.overheadCosts) return 0
+      
+      const orderTotal = state.getOrderTotal(orderId)
+      if (orderTotal === 0) return 0
+      
+      const itemTotal = item.price * item.quantity
+      const itemProportion = itemTotal / orderTotal
+      
+      // Overhead costs are always stored in EUR regardless of display currency
+      return order.overheadCosts * itemProportion
+    },
+    getItemLandedCost: (state) => (orderId, item) => {
+      const itemOverheadCost = state.getItemOverheadCost(orderId, item)
+      const baseCostPerUnit = item.price + (itemOverheadCost / item.quantity)
+      return baseCostPerUnit
+    },
+    getItemRetailPrice: (state) => (orderId, item) => {
+      const order = state.orders[orderId]
+      if (!order) return item.price
+      
+      const landedCost = state.getItemLandedCost(orderId, item)
+      const retailMargin = order.retailMargin || 0
+      return landedCost * (1 + retailMargin / 100)
     }
   },
   actions: {
@@ -121,6 +147,9 @@ export const useOrdersStore = defineStore('orders', {
         id, 
         name, 
         items: {}, 
+        overheadCosts: 0,
+        retailMargin: 0,
+        currencyPreference: 'EUR',
         createdAt: Date.now(),
         updatedAt: Date.now()
       }
@@ -159,6 +188,23 @@ export const useOrdersStore = defineStore('orders', {
       if (this.orders[orderId]?.items[itemId]) {
         Object.assign(this.orders[orderId].items[itemId], updates)
         this.orders[orderId].updatedAt = Date.now()
+        this.saveToStorage()
+      }
+    },
+    updateOrderDetails(orderId, updates) {
+      if (this.orders[orderId]) {
+        Object.assign(this.orders[orderId], updates)
+        this.orders[orderId].updatedAt = Date.now()
+        this.saveToStorage()
+      }
+    },
+    refreshRetailPrices(orderId) {
+      // This function doesn't need to change any data!
+      // The retail prices are calculated dynamically by getItemRetailPrice
+      // Just trigger a reactivity update to refresh the UI
+      const order = this.orders[orderId]
+      if (order) {
+        order.updatedAt = Date.now()
         this.saveToStorage()
       }
     },
@@ -203,24 +249,18 @@ export const useOrdersStore = defineStore('orders', {
     migrateOrdersFormat() {
       let needsMigration = false
       
-      // Check if any orders need migration
+      // Check if any orders need migration to new landed cost format
       for (const [orderId, order] of Object.entries(this.orders)) {
-        if (order.items) {
-          for (const [itemKey, item] of Object.entries(order.items)) {
-            // Check for old format: itemKey equals productId
-            // OR fabric is not an array (new requirement)
-            if ((itemKey === item.productId && !itemKey.includes('_')) || 
-                (item.fabric && !Array.isArray(item.fabric))) {
-              needsMigration = true
-              break
-            }
-          }
+        if (typeof order.overheadCosts === 'undefined' || 
+            typeof order.retailMargin === 'undefined' || 
+            typeof order.currencyPreference === 'undefined') {
+          needsMigration = true
+          break
         }
-        if (needsMigration) break
       }
       
       if (needsMigration) {
-        console.log('Migrating orders to new format...')
+        console.log('Migrating orders to include landed cost fields...')
         
         // Create backup of existing data before migration
         const backupKey = `orders_backup_${Date.now()}`
@@ -232,42 +272,18 @@ export const useOrdersStore = defineStore('orders', {
         
         try {
           for (const [orderId, order] of Object.entries(this.orders)) {
-            if (order.items) {
-              const newItems = {}
-              
-              for (const [itemKey, item] of Object.entries(order.items)) {
-                // Check if this is old format (itemKey equals productId)
-                if (itemKey === item.productId && !itemKey.includes('_')) {
-                  // Generate new itemId for migrated data
-                  const fabricArray = Array.isArray(item.fabric) ? item.fabric : [item.fabric]
-                  const fabricKey = fabricArray.join('_')
-                  const newItemId = `${item.productId}_${fabricKey}_migrated_${Date.now()}`
-                  newItems[newItemId] = {
-                    ...item,
-                    fabric: fabricArray,
-                    notes: item.notes || '' // Ensure notes field exists
-                  }
-                } else if (item.fabric && !Array.isArray(item.fabric)) {
-                  // New format itemKey but fabric is still string - convert to array
-                  const fabricArray = [item.fabric]
-                  newItems[itemKey] = {
-                    ...item,
-                    fabric: fabricArray,
-                    notes: item.notes || ''
-                  }
-                } else {
-                  // Already fully migrated format, ensure notes field exists
-                  newItems[itemKey] = {
-                    ...item,
-                    fabric: item.fabric || [],
-                    notes: item.notes || ''
-                  }
-                }
-              }
-              
-              this.orders[orderId].items = newItems
-              this.orders[orderId].updatedAt = Date.now()
+            // Add new landed cost fields
+            if (typeof order.overheadCosts === 'undefined') {
+              order.overheadCosts = 0
             }
+            if (typeof order.retailMargin === 'undefined') {
+              order.retailMargin = 0
+            }
+            if (typeof order.currencyPreference === 'undefined') {
+              order.currencyPreference = 'EUR'
+            }
+            
+            order.updatedAt = Date.now()
           }
           
           // Save migrated data

@@ -16,6 +16,10 @@
               Include Prices
             </label>
             <label class="checkbox-label">
+              <input type="checkbox" v-model="includeLandedCosts" />
+              Include Landed Costs
+            </label>
+            <label class="checkbox-label">
               <input type="checkbox" v-model="includeNotes" />
               Include Notes
             </label>
@@ -28,7 +32,8 @@
             <h2>{{ order.name }}</h2>
             <div class="order-meta">
               <span>{{ itemCount }} items</span>
-              <span v-if="includePrices">{{ formatPrice(orderTotal) }}</span>
+              <span v-if="includePrices">{{ formatPriceWithCurrency(orderTotal) }}</span>
+              <span v-if="order.overheadCosts > 0">{{ formatPriceWithCurrency(order.overheadCosts) }} overhead</span>
             </div>
           </div>
           
@@ -38,7 +43,10 @@
                 <th>Product ID</th>
                 <th>Product Name</th>
                 <th>Fabric</th>
-                <th v-if="includePrices">Price</th>
+                <th v-if="includePrices">Base Price</th>
+                <th v-if="includeLandedCosts">Overhead Cost</th>
+                <th v-if="includeLandedCosts">Landed Cost</th>
+                <th v-if="includeLandedCosts">Retail Price</th>
                 <th>Quantity</th>
                 <th v-if="includePrices">Line Total</th>
                 <th v-if="includeNotes">Notes</th>
@@ -49,18 +57,24 @@
                 <td>{{ item.productId }}</td>
                 <td>{{ getProductName(item.productId) }}</td>
                 <td>{{ Array.isArray(item.fabric) && item.fabric.length > 0 ? item.fabric.join(', ') : item.fabric || '' }}</td>
-                <td v-if="includePrices">{{ formatPrice(item.price) }}</td>
+                <td v-if="includePrices">{{ formatPriceWithCurrency(item.price) }}</td>
+                <td v-if="includeLandedCosts">{{ formatPriceWithCurrency(getItemOverheadCostPerUnit(item)) }}</td>
+                <td v-if="includeLandedCosts">{{ formatPriceWithCurrency(getItemLandedCost(item)) }}</td>
+                <td v-if="includeLandedCosts">{{ formatPriceWithCurrency(getItemRetailPrice(item)) }}</td>
                 <td>{{ item.quantity }}</td>
-                <td v-if="includePrices">{{ formatPrice(item.price * item.quantity) }}</td>
+                <td v-if="includePrices">{{ formatPriceWithCurrency(item.price * item.quantity) }}</td>
                 <td v-if="includeNotes">{{ item.notes || '-' }}</td>
               </tr>
             </tbody>
             <tfoot>
               <tr class="summary-row">
                 <td :colspan="getColSpan()"><strong>Order Total</strong></td>
+                <td v-if="includeLandedCosts"><strong>{{ formatPriceWithCurrency(order.overheadCosts || 0) }}</strong></td>
+                <td v-if="includeLandedCosts"><strong>{{ formatPriceWithCurrency(totalLandedCost) }}</strong></td>
+                <td v-if="includeLandedCosts"><strong>{{ formatPriceWithCurrency(totalRetailPrice) }}</strong></td>
                 <td><strong>{{ totalQuantity }}</strong></td>
-                <td v-if="includePrices"><strong>{{ formatPrice(orderTotal) }}</strong></td>
-                <td v-if="includeNotes && !includePrices"></td>
+                <td v-if="includePrices"><strong>{{ formatPriceWithCurrency(orderTotal) }}</strong></td>
+                <td v-if="includeNotes && !includePrices && !includeLandedCosts"></td>
               </tr>
             </tfoot>
           </table>
@@ -77,7 +91,19 @@
               </div>
               <div v-if="includePrices" class="summary-item">
                 <span class="label">Grand Total:</span>
-                <span class="value">{{ formatPrice(orderTotal) }}</span>
+                <span class="value">{{ formatPriceWithCurrency(orderTotal) }}</span>
+              </div>
+              <div v-if="includeLandedCosts && order.overheadCosts > 0" class="summary-item">
+                <span class="label">Total Overhead:</span>
+                <span class="value">{{ formatPriceWithCurrency(order.overheadCosts) }}</span>
+              </div>
+              <div v-if="includeLandedCosts" class="summary-item">
+                <span class="label">Total Landed Cost:</span>
+                <span class="value">{{ formatPriceWithCurrency(totalLandedCost) }}</span>
+              </div>
+              <div v-if="includeLandedCosts && (order.retailMargin || 0) > 0" class="summary-item">
+                <span class="label">Total Retail Price:</span>
+                <span class="value">{{ formatPriceWithCurrency(totalRetailPrice) }}</span>
               </div>
             </div>
           </div>
@@ -92,6 +118,7 @@ import { ref, computed } from 'vue'
 import { useProductsStore } from '@/stores/products'
 import { useFabricsStore } from '@/stores/fabrics'
 import { useOrdersStore } from '@/stores/orders'
+import { formatPrice, convertCurrency } from '@/utils/currency'
 
 export default {
   name: 'OrderExportModal',
@@ -109,6 +136,7 @@ export default {
     const exportTable = ref(null)
     const copySuccess = ref(false)
     const includePrices = ref(true)
+    const includeLandedCosts = ref(true)
     const includeNotes = ref(true)
     
     const orderItems = computed(() => ordersStore.getOrderItemsWithId(props.order.id))
@@ -120,18 +148,45 @@ export default {
       orderItems.value.reduce((sum, item) => sum + item.quantity, 0)
     )
     
+    const totalLandedCost = computed(() => 
+      orderItems.value.reduce((sum, item) => sum + (ordersStore.getItemLandedCost(props.order.id, item) * item.quantity), 0)
+    )
+    
+    const totalRetailPrice = computed(() => 
+      orderItems.value.reduce((sum, item) => sum + (ordersStore.getItemRetailPrice(props.order.id, item) * item.quantity), 0)
+    )
+    
     const getProductName = (productId) => {
       const product = productsStore.getProductById(productId)
       return product ? product.productName : `Product ${productId}`
     }
     
-    const formatPrice = (price) => {
-      return `€${price.toFixed(2)}`
+    const formatPriceWithCurrency = (price) => {
+      const currency = props.order.currencyPreference || 'EUR'
+      const convertedPrice = convertCurrency(price, 'EUR', currency)
+      return formatPrice(convertedPrice, currency)
+    }
+    
+    const getItemOverheadCost = (item) => {
+      return ordersStore.getItemOverheadCost(props.order.id, item)
+    }
+    
+    const getItemOverheadCostPerUnit = (item) => {
+      return ordersStore.getItemOverheadCost(props.order.id, item) / item.quantity
+    }
+    
+    const getItemLandedCost = (item) => {
+      return ordersStore.getItemLandedCost(props.order.id, item)
+    }
+    
+    const getItemRetailPrice = (item) => {
+      return ordersStore.getItemRetailPrice(props.order.id, item)
     }
     
     const getColSpan = () => {
       let cols = 3 // Product ID, Product Name, Fabric
-      if (includePrices.value) cols += 1 // Price column
+      if (includePrices.value) cols += 1 // Base Price column
+      if (includeLandedCosts.value) cols += 3 // Overhead Cost + Landed Cost + Retail Price columns
       return cols
     }
     
@@ -142,7 +197,8 @@ export default {
         
         // Build header
         tsvContent += 'Product ID\tProduct Name\tFabric'
-        if (includePrices.value) tsvContent += '\tPrice'
+        if (includePrices.value) tsvContent += '\tBase Price'
+        if (includeLandedCosts.value) tsvContent += '\tOverhead Cost\tLanded Cost\tRetail Price'
         tsvContent += '\tQuantity'
         if (includePrices.value) tsvContent += '\tLine Total'
         if (includeNotes.value) tsvContent += '\tNotes'
@@ -150,17 +206,21 @@ export default {
         
         orderItems.value.forEach(item => {
           let row = `${item.productId}\t${getProductName(item.productId)}\t${Array.isArray(item.fabric) ? item.fabric.join(', ') : item.fabric}`
-          if (includePrices.value) row += `\t${formatPrice(item.price)}`
+          if (includePrices.value) row += `\t${formatPriceWithCurrency(item.price)}`
+          if (includeLandedCosts.value) row += `\t${formatPriceWithCurrency(getItemOverheadCostPerUnit(item))}\t${formatPriceWithCurrency(getItemLandedCost(item))}\t${formatPriceWithCurrency(getItemRetailPrice(item))}`
           row += `\t${item.quantity}`
-          if (includePrices.value) row += `\t${formatPrice(item.price * item.quantity)}`
+          if (includePrices.value) row += `\t${formatPriceWithCurrency(item.price * item.quantity)}`
           if (includeNotes.value) row += `\t${item.notes || ''}`
           tsvContent += row + '\n'
         })
         
         // Add summary row
-        let summaryRow = '\t\t\tOrder Total\t' + totalQuantity.value
-        if (includePrices.value) summaryRow += `\t${formatPrice(orderTotal.value)}`
-        if (includeNotes.value) summaryRow += '\t'
+        let summaryRow = '\t\t\tOrder Total'
+        if (includePrices.value) summaryRow += '\t'
+        if (includeLandedCosts.value) summaryRow += `\t${formatPriceWithCurrency(props.order.overheadCosts || 0)}\t${formatPriceWithCurrency(totalLandedCost.value)}\t${formatPriceWithCurrency(totalRetailPrice.value)}`
+        summaryRow += `\t${totalQuantity.value}`
+        if (includePrices.value) summaryRow += `\t${formatPriceWithCurrency(orderTotal.value)}`
+        if (includeNotes.value && !includeLandedCosts.value && !includePrices.value) summaryRow += '\t'
         tsvContent += summaryRow + '\n'
         
         await navigator.clipboard.writeText(tsvContent)
@@ -416,13 +476,21 @@ export default {
       exportTable,
       copySuccess,
       includePrices,
+      includeLandedCosts,
       includeNotes,
       orderItems,
       itemCount,
       orderTotal,
       totalQuantity,
+      totalLandedCost,
+      totalRetailPrice,
       getProductName,
-      formatPrice,
+      formatPrice: formatPriceWithCurrency,
+      formatPriceWithCurrency,
+      getItemOverheadCost,
+      getItemOverheadCostPerUnit,
+      getItemLandedCost,
+      getItemRetailPrice,
       getColSpan,
       copyTable,
       printTable
@@ -544,7 +612,7 @@ export default {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
