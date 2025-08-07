@@ -22,6 +22,11 @@ export default createRouter({
       path: '/orders', 
       name: 'Orders',
       component: () => import('@/views/OrdersView.vue') 
+    },
+    { 
+      path: '/data-management', 
+      name: 'DataManagement',
+      component: () => import('@/views/DataManagementView.vue') 
     }
   ]
 })

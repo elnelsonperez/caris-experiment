@@ -5,6 +5,7 @@ import App from './App.vue'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 import './styles/main.css'
+import { useProductsStore } from '@/stores/products'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -27,5 +28,14 @@ const toastOptions = {
 app.use(pinia)
 app.use(router)
 app.use(Toast, toastOptions)
+
+// Load blacklist settings when app starts
+const loadInitialData = async () => {
+  const productsStore = useProductsStore()
+  await productsStore.loadBlacklist()
+  productsStore.loadPricesFromStorage()
+}
+
+loadInitialData()
 
 app.mount('#app')

@@ -2,6 +2,20 @@ import { defineStore } from 'pinia'
 import productsData from '@/data/products.json'
 import invoiceData from '@/data/invoice01.json'
 
+// Helper function to load settings
+const loadSettings = async () => {
+  try {
+    const response = await fetch('/api/settings')
+    if (response.ok) {
+      const settings = await response.json()
+      return settings.blacklistedImages || []
+    }
+  } catch (error) {
+    console.warn('Failed to load blacklist settings, proceeding without filtering:', error)
+  }
+  return []
+}
+
 // Create default prices map from invoice data
 const createDefaultPrices = () => {
   const defaultPrices = {}
@@ -16,21 +30,46 @@ const createDefaultPrices = () => {
 export const useProductsStore = defineStore('products', {
   state: () => ({
     products: productsData,
+    filteredProducts: [], // Products with blacklisted images removed
     searchQuery: '',
     productPrices: {}, // User-set prices
-    defaultPrices: createDefaultPrices() // Invoice-based default prices
+    defaultPrices: createDefaultPrices(), // Invoice-based default prices
+    blacklistedImages: [], // Cached blacklist
+    blacklistLoaded: false
   }),
   getters: {
-    filteredProducts: (state) => {
-      if (!state.searchQuery) return state.products
-      const query = state.searchQuery.toLowerCase()
-      return state.products.filter(product => 
+    // Get products with blacklisted images filtered out
+    productsWithoutBlacklisted: (state) => {
+      if (!state.blacklistLoaded || state.blacklistedImages.length === 0) {
+        return state.products
+      }
+      
+      return state.products.map(product => {
+        // Filter out blacklisted images from the images array
+        const filteredImages = product.images ? 
+          product.images.filter(imageUrl => !state.blacklistedImages.includes(imageUrl)) :
+          []
+        
+        return {
+          ...product,
+          images: filteredImages
+        }
+      })
+    },
+    
+    filteredProducts() {
+      const productsToUse = this.productsWithoutBlacklisted
+      if (!this.searchQuery) return productsToUse
+      const query = this.searchQuery.toLowerCase()
+      return productsToUse.filter(product => 
         product.productId.toLowerCase().includes(query) ||
         product.productName.toLowerCase().includes(query)
       )
     },
-    getProductById: (state) => (id) => {
-      return state.products.find(product => product.productId === id)
+    getProductById() {
+      return (id) => {
+        return this.productsWithoutBlacklisted.find(product => product.productId === id)
+      }
     },
     getProductPrice: (state) => (productId) => {
       // Return user-set price if available, otherwise default price from invoice, otherwise 0
@@ -63,6 +102,24 @@ export const useProductsStore = defineStore('products', {
       } catch (error) {
         console.error('Failed to load product prices from localStorage:', error)
       }
+    },
+    
+    async loadBlacklist() {
+      try {
+        this.blacklistedImages = await loadSettings()
+        this.blacklistLoaded = true
+        console.log(`Loaded ${this.blacklistedImages.length} blacklisted images`)
+      } catch (error) {
+        console.error('Failed to load blacklist:', error)
+        this.blacklistedImages = []
+        this.blacklistLoaded = true
+      }
+    },
+    
+    refreshBlacklist() {
+      // Force reload of blacklist
+      this.blacklistLoaded = false
+      return this.loadBlacklist()
     }
   }
 })

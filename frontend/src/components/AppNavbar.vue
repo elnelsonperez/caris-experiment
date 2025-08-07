@@ -15,6 +15,11 @@
                 Orders
               </router-link>
             </li>
+            <li>
+              <router-link to="/data-management" class="nav-link" :class="{ active: $route.path === '/data-management' }">
+                Data Management
+              </router-link>
+            </li>
           </ul>
         </div>
         
