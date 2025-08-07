@@ -1,0 +1,42 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "INTERIOR"
+    },
+    {
+      "id": 2,
+      "name": "Wooden Chair"
+    },
+    {
+      "id": 3,
+      "name": "Office Chairs"
+    },
+    {
+      "id": 4,
+      "name": "Bar Stool"
+    },
+    {
+      "id": 5,
+      "name": "Sofa"
+    },
+    {
+      "id": 6,
+      "name": "Wingback Chair"
+    },
+    {
+      "id": 7,
+      "name": "Couch"
+    },
+    {
+      "id": 8,
+      "name": "Metal Chair"
+    },
+    {
+      "id": 9,
+      "name": "OUTDOOR"
+    }
+  ],
+  "generated_at": "2025-08-07T23:38:16.190Z",
+  "description": "Category ID mappings generated from consolidated product data"
+}

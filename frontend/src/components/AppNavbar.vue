@@ -15,11 +15,6 @@
                 Orders
               </router-link>
             </li>
-            <li>
-              <router-link to="/analytics" class="nav-link" :class="{ active: $route.path === '/analytics' }">
-                Analytics
-              </router-link>
-            </li>
           </ul>
         </div>
         
