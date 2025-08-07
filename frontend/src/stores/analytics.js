@@ -5,10 +5,8 @@ export const useAnalyticsStore = defineStore('analytics', {
   state: () => ({
     settings: {
       fixedCosts: 0,
-      targetRevenue: 0,
       launchInvestment: 0,
       recoveryPeriod: 12,
-      expectedVolume: 0,
       lastUpdated: null
     }
   }),
@@ -76,62 +74,94 @@ export const useAnalyticsStore = defineStore('analytics', {
       return ((state.averageRetailPrice - state.averageLandedCost) / state.averageLandedCost) * 100
     },
     
-    // Launch cost calculations
-    launchCostPerUnit: (state) => {
-      if (state.settings.expectedVolume === 0) return 0
-      return state.settings.launchInvestment / state.settings.expectedVolume
-    },
-    
-    trueProfitPerUnit: (state) => {
-      return state.profitPerUnit - state.launchCostPerUnit
-    },
-    
     // Break-even analysis
     breakEvenUnits: (state) => {
       if (state.profitPerUnit <= 0) return Infinity
       return Math.ceil(state.settings.fixedCosts / state.profitPerUnit)
     },
     
-    // Target analysis
-    targetUnits: (state) => {
-      if (state.averageRetailPrice === 0) return 0
-      return Math.ceil(state.settings.targetRevenue / state.averageRetailPrice)
+    // Scenario projections
+    scenario1x: (state) => {
+      const units = state.breakEvenUnits
+      return {
+        units,
+        revenue: units * state.averageRetailPrice,
+        totalProfit: units * state.profitPerUnit - state.settings.fixedCosts,
+        unitsPerWeek: Math.ceil(units / 4.33),
+        unitsPerDay: Math.ceil(units / 30),
+        description: "Break-even (covers fixed costs only)"
+      }
     },
     
-    // Time-based projections
-    unitsPerWeek: (state) => {
-      return Math.ceil(state.targetUnits / 4.33) // Average weeks per month
+    scenario2x: (state) => {
+      const units = state.breakEvenUnits * 2
+      return {
+        units,
+        revenue: units * state.averageRetailPrice,
+        totalProfit: units * state.profitPerUnit - state.settings.fixedCosts,
+        unitsPerWeek: Math.ceil(units / 4.33),
+        unitsPerDay: Math.ceil(units / 30),
+        description: "2x break-even (comfortable profit margin)"
+      }
     },
     
-    unitsPerDay: (state) => {
-      return Math.ceil(state.targetUnits / 30) // Average days per month
+    scenario3x: (state) => {
+      const units = state.breakEvenUnits * 3
+      return {
+        units,
+        revenue: units * state.averageRetailPrice,
+        totalProfit: units * state.profitPerUnit - state.settings.fixedCosts,
+        unitsPerWeek: Math.ceil(units / 4.33),
+        unitsPerDay: Math.ceil(units / 30),
+        description: "3x break-even (strong growth scenario)"
+      }
     },
     
-    // Monthly profit projection
-    monthlyProfit: (state) => {
-      return state.targetUnits * state.profitPerUnit - state.settings.fixedCosts
-    },
-    
-    // Recovery timeline
-    timeToBreakEven: (state) => {
-      if (state.trueProfitPerUnit <= 0) return Infinity
-      const unitsNeeded = state.settings.launchInvestment / state.trueProfitPerUnit
-      return Math.ceil(unitsNeeded / state.targetUnits) // Months to recover
-    },
-    
-    // ROI calculation
-    roi: (state) => {
+    // Launch cost recovery scenarios
+    launchRecoveryAt1x: (state) => {
       if (state.settings.launchInvestment === 0) return 0
-      const monthlyTrueProfit = state.targetUnits * state.trueProfitPerUnit
-      if (monthlyTrueProfit <= 0) return -100
-      return (monthlyTrueProfit / state.settings.launchInvestment) * 100 // Monthly ROI %
+      const monthlyProfit = state.scenario1x.totalProfit
+      if (monthlyProfit <= 0) return Infinity
+      return Math.ceil(state.settings.launchInvestment / monthlyProfit)
+    },
+    
+    launchRecoveryAt2x: (state) => {
+      if (state.settings.launchInvestment === 0) return 0
+      const monthlyProfit = state.scenario2x.totalProfit
+      if (monthlyProfit <= 0) return Infinity
+      return Math.ceil(state.settings.launchInvestment / monthlyProfit)
+    },
+    
+    launchRecoveryAt3x: (state) => {
+      if (state.settings.launchInvestment === 0) return 0
+      const monthlyProfit = state.scenario3x.totalProfit
+      if (monthlyProfit <= 0) return Infinity
+      return Math.ceil(state.settings.launchInvestment / monthlyProfit)
+    },
+    
+    // Margin analysis
+    marginAnalysis: (state) => {
+      const margin = state.retailMarginPercent
+      let category = 'poor'
+      let recommendation = 'Consider increasing prices or reducing costs'
+      
+      if (margin >= 50) {
+        category = 'excellent'
+        recommendation = 'Strong margin - good pricing power'
+      } else if (margin >= 30) {
+        category = 'good'
+        recommendation = 'Healthy margin for furniture business'
+      } else if (margin >= 15) {
+        category = 'fair'
+        recommendation = 'Acceptable but could be improved'
+      }
+      
+      return { category, recommendation, margin }
     },
     
     // Status indicators
     isOrderProfitable: (state) => state.profitPerUnit > 0,
-    isTargetRealistic: (state) => state.unitsPerDay <= 50, // Arbitrary realistic daily sales limit
-    isBreakEvenAchievable: (state) => state.breakEvenUnits < state.targetUnits,
-    isLaunchRecoverable: (state) => state.timeToBreakEven <= state.settings.recoveryPeriod
+    hasReasonableMargin: (state) => state.retailMarginPercent >= 15
   },
   
   actions: {
@@ -164,10 +194,8 @@ export const useAnalyticsStore = defineStore('analytics', {
     resetSettings() {
       this.settings = {
         fixedCosts: 0,
-        targetRevenue: 0,
         launchInvestment: 0,
         recoveryPeriod: 12,
-        expectedVolume: 0,
         lastUpdated: null
       }
       this.saveToStorage()

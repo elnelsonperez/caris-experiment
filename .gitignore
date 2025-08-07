@@ -2,3 +2,4 @@
 .idea
 caris-scraper-python/.venv
 storage/*
+categories/node_modules

@@ -1,0 +1,16 @@
+{
+  "name": "caris-scraper",
+  "version": "1.0.0",
+  "description": "Product scraper for Caris OpenCart website",
+  "main": "caris-scraper.js",
+  "scripts": {
+    "start": "node caris-scraper.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["scraper", "puppeteer", "opencart", "caris"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^21.0.0"
+  }
+}
